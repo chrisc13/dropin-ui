@@ -1,0 +1,33 @@
+.nav-bar{
+    top: 0;
+    position: sticky;
+    height: 75px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #202020;
+}
+.nav-bar li{
+    color: white;
+    background-color: rgb(70, 70, 114);
+    border-radius: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 6px;
+}
+
+.logo{
+    color: white;
+    padding: 20px;
+    font-size: 30px;
+}
+
+.nav-bar ul{
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    padding: 20px;
+}
+

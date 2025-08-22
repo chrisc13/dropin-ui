@@ -1,0 +1,54 @@
+.welcome-div{
+    display: block;
+}
+
+.welcome-div > h1{
+    text-align: center;
+    font-size: 65px;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.welcome-form{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    height: 300px;
+    background-color: #A6AEBF;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.welcome-form label{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.welcome-form input{
+    height: 30px;
+    margin-bottom: 10px;
+}
+#register-btn{
+    margin-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#register-btn:hover{
+    cursor: pointer;
+}
+
+#submit-btn-welcome{
+    margin-top: auto;
+    height: 50px;
+    background-color: #405D72;
+    color: white;
+}
+
+#submit-btn-welcome:hover{
+    cursor: pointer;
+}
+
