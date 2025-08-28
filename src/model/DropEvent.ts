@@ -1,16 +1,16 @@
-export interface DropEvent{
-    event_id: string,
-    event_name: string,
-    sport_type: string,
-    location_name: string,
-    city: string,
-    date: string,
-    start_time: string,
-    end_time: string,
-    max_players: string,
-    current_players: string,
-    organizer_name: string,
-    organizer_ui: string,
-    latitude: string,
-    longitude: string,
-}
+export interface DropEvent {
+    id?: string;        // keep as string (GUID or ObjectId)
+    eventName: string;
+    sportType: string;
+    locationName: string;
+    city: string;
+    date: Date;             // corresponds to DateTime in C#
+    startTime: string;
+    endTime: string;
+    maxPlayers: number;
+    currentPlayers: number;
+    organizerId: string;    // reference to User by ID
+    latitude: number;
+    longitude: number;
+  }
+  

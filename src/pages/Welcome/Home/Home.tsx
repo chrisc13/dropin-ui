@@ -9,11 +9,13 @@ import { GenericForm } from "../../../components/Form/Form";
 import { FormFields } from "../../../types/FormFields";
 import { Popup } from "../../../components/Popup/Popup";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
+import { useAuth } from "../../../context/AuthContext";
 
 export const Home = () =>{
     const [events, setEvents] = useState<DropEvent[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showCreateEventPopup, setShowCreateEventPopup] = useState<boolean>(false);
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -30,9 +32,9 @@ export const Home = () =>{
       }, []);
 
     const initialDropEvent: FormFields<DropEvent> = {
-      event_name: '',
-      location_name: '',
-      max_players: ''
+      eventName: '',
+      locationName: '',
+      maxPlayers: 0
     };
     
     const handleClosePopup = () => {
@@ -41,20 +43,18 @@ export const Home = () =>{
 
     const handleCreateEventSubmit = async (values: FormFields<DropEvent>) => {
       const newEvent: DropEvent = {
-        event_id: crypto.randomUUID(),
-        event_name: values.event_name || "",
-        sport_type: values.sport_type || "",
-        location_name: values.location_name || "",
+        eventName: values.eventName || "",
+        sportType: values.sportType || "",
+        locationName: values.locationName || "",
         city: values.city || "",
-        date: values.date || "",
-        start_time: values.start_time || "",
-        end_time: values.end_time || "",
-        max_players: values.max_players || "",
-        current_players: "0",
-        organizer_name: values.organizer_name || "",
-        organizer_ui: values.organizer_ui || "",
-        latitude: values.latitude || "",
-        longitude: values.longitude || "",
+        date: values.date || new Date(),
+        startTime: values.startTime || "",
+        endTime: values.endTime || "",
+        maxPlayers: values.maxPlayers || 0,
+        currentPlayers: values.currentPlayers || 0,
+        organizerId: values.organizerId || "",
+        latitude: values.latitude || 0,
+        longitude: values.longitude || 0,
       };
     
       console.log('Submitted', values);
@@ -95,8 +95,10 @@ export const Home = () =>{
     return(
         <React.Fragment>
             <div className="top-wrapper">
+            <button onClick={logout}>Logout</button>
                 <div className="top-banner">
                     <div className="banner-text">
+                    Hello {user?.username}!
                     What's happening nearby:
                     </div>
                     <button className="create-event-button" onClick={e => setShowCreateEventPopup(true)}>Create Event</button>

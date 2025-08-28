@@ -16,7 +16,10 @@
     padding-right: 30px;
     padding-top: 6px;
 }
-
+.nav-bar.hide {
+  display: none;
+  }
+  
 .logo{
     color: white;
     padding: 20px;

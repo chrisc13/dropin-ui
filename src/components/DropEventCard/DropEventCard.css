@@ -8,6 +8,9 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
+  .card-wrapper:hover{
+    cursor: pointer;
+}
 
   .card-wrapper img {
     height: 150px; 
@@ -32,8 +35,9 @@
     flex-shrink: 0;
   }
 
-  .card-button{
+  .card-footer{
     color: white;
+    text-align: center;
     margin: 0;
     margin-bottom: 0%;
     width: 100%;

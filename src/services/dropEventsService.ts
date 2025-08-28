@@ -27,7 +27,7 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
       }
-      const data = await response.json();
+      await response.json();
       return true;
     } catch (error) {
       console.error("Fetch error:", error);

@@ -30,7 +30,7 @@ export const Popup: React.FC<PopupProps> = ({ title, isOpen, setClose, children,
             <h2>{title}</h2>
             <div className="popup-body">{children}</div>
             <div className="popup-footer">
-                <button className="close-button" onClick={() => setClose()}>Close</button>
+                <button className="close-button" onClick={e => { e.stopPropagation(); setClose()}}>Close</button>
                 {footer && <>{footer}</>}
             </div>
         </div>
