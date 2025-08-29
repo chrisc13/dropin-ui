@@ -15,11 +15,13 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
   };
 
   const createDropEvent = async (dropEvent: DropEvent): Promise<boolean> => {
+    const token = sessionStorage.getItem("accessToken");
     try {
       const response = await fetch("http://localhost:5084/Event/CreateEvent",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(dropEvent),
       });

@@ -17,7 +17,8 @@ const login = async (loginRequest: AuthRequest): Promise<User> => {
       }
       const data = await response.json();
       console.log(data);
-      return data as User;
+      sessionStorage.setItem("accessToken", data.token)
+      return data.appUser as User;
     } catch (error) {
       console.error("Fetch error:", error);
       throw error; // Re-throw the error after logging
