@@ -8,6 +8,9 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
+  .card-wrapper.attending{
+    border: solid 5px rgb(63, 137, 63)
+  }
   .card-wrapper:hover{
     cursor: pointer;
 }

@@ -20,6 +20,27 @@ export function GenericForm<T>({ initialValues, onSubmit, formId }: FormProps<T>
     onSubmit(formValues);
   };
 
+  const getInputType = (propName: string) => {
+    if (propName == "date"){
+      return  <input
+      id={propName}
+      type="datetime-local"
+      className="form-input"
+      value={(formValues as any)[propName] || new Date().toDateString()}
+      onChange={(e) => handleChange(propName as keyof T, e.target.value)}
+      placeholder={`Enter ${propName}`}
+    />
+    }
+    return <input
+    id={propName}
+    type="text"
+    className="form-input"
+    value={(formValues as any)[propName] || ""}
+    onChange={(e) => handleChange(propName as keyof T, e.target.value)}
+    placeholder={`Enter ${propName}`}
+  />
+  }
+
   return (
     <form id={formId} className="generic-form" onSubmit={handleSubmit}>
       {Object.keys(initialValues).map((key) => (
@@ -27,14 +48,8 @@ export function GenericForm<T>({ initialValues, onSubmit, formId }: FormProps<T>
           <label htmlFor={key} className="form-label">
             {key.replace("_", " ")}
           </label>
-          <input
-            id={key}
-            type="text"
-            className="form-input"
-            value={(formValues as any)[key] || ""}
-            onChange={(e) => handleChange(key as keyof T, e.target.value)}
-            placeholder={`Enter ${key}`}
-          />
+          {getInputType(key)}
+         
         </div>
       ))}
     </form>

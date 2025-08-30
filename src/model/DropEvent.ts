@@ -9,6 +9,7 @@ export interface DropEvent {
     endTime: string;
     maxPlayers: number;
     currentPlayers: number;
+    organizerName: string;    // reference to User by ID
     organizerId: string;    // reference to User by ID
     latitude: number;
     longitude: number;

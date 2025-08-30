@@ -62,8 +62,8 @@ const Welcome: React.FC<WelcomeProps> = ({isLoggedIn, setIsLoggedIn}) =>{
       }
 
       try {
-        const data = await handleRegisterRequest(registerRequest);
-        console.log(data)
+        //const data = await handleRegisterRequest(registerRequest);
+        //console.log(data)
         await handleRegisterRequest(registerRequest);
         await handleLogin(); // auto-login after registration
         const user: User = {

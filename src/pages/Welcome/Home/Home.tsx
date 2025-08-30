@@ -32,8 +32,9 @@ export const Home = () =>{
       }, []);
 
     const initialDropEvent: FormFields<DropEvent> = {
-      eventName: '',
-      locationName: '',
+      sportType: '',
+      city: '',
+      date: new Date(),
       maxPlayers: 0
     };
     
@@ -52,7 +53,8 @@ export const Home = () =>{
         endTime: values.endTime || "",
         maxPlayers: values.maxPlayers || 0,
         currentPlayers: values.currentPlayers || 0,
-        organizerId: values.organizerId || "",
+        organizerName: "",
+        organizerId: "",
         latitude: values.latitude || 0,
         longitude: values.longitude || 0,
       };
