@@ -5,13 +5,8 @@ import { handleRegisterRequest, handleLoginRequest } from "../../services/authSe
 import { AuthRequest, User } from "../../model/User";
 import { useAuth } from "../../context/AuthContext"; // hook to access context
 
-
-interface WelcomeProps {
-    isLoggedIn: boolean;
-    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  }
     
-const Welcome: React.FC<WelcomeProps> = ({isLoggedIn, setIsLoggedIn}) =>{
+const Welcome: React.FC = () =>{
     const { user, login } = useAuth(); // get login function from context
 
     const [username, setUsername] = useState("");
@@ -41,10 +36,8 @@ const Welcome: React.FC<WelcomeProps> = ({isLoggedIn, setIsLoggedIn}) =>{
 
       try {
         const loggedInUser = await handleLoginRequest(loginRequest);
-        login(loggedInUser); // persist in context
+        login(loggedInUser); 
         setLoading(false);
-        //setIsLoggedIn(true);
-        //setEvents(data);
       } catch (error: any) {
         if (error.message === "Invalid credentials") {
           setError("Username or password is incorrect");
@@ -62,8 +55,6 @@ const Welcome: React.FC<WelcomeProps> = ({isLoggedIn, setIsLoggedIn}) =>{
       }
 
       try {
-        //const data = await handleRegisterRequest(registerRequest);
-        //console.log(data)
         await handleRegisterRequest(registerRequest);
         await handleLogin(); // auto-login after registration
         const user: User = {
@@ -72,8 +63,6 @@ const Welcome: React.FC<WelcomeProps> = ({isLoggedIn, setIsLoggedIn}) =>{
         }
         login(user)
         setLoading(false);
-        //setIsLoggedIn(true);
-        //setEvents(data);
       } catch (error) {
         console.error("Error register:", error);
       }

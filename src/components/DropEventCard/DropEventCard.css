@@ -80,3 +80,33 @@
   color: #6b7280; /* gray-500 */
 }
 
+.attendeesContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px
+}
+.attendeesContainer.label{
+  margin-right: 2%;
+}
+
+.attendeeItem {
+  width: 15%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease;
+  margin-left: 1%;
+  text-align: center;
+}
+
+.attendeeItem:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}

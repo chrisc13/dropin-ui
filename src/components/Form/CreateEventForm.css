@@ -1,0 +1,117 @@
+/* Form container */
+.generic-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Form groups for label + input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Labels */
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #111827; /* dark gray */
+}
+
+/* Text inputs & number inputs */
+.form-group input[type="text"],
+.form-group input[type="datetime-local"],
+.form-group input[type="number"],
+.form-group textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db; /* light gray */
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+/* Hover/focus states */
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #3b82f6; /* blue */
+}
+
+/* Textarea styling */
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+/* Submit button */
+.generic-form .btn {
+  padding: 0.6rem 1rem;
+  background-color: #111827; /* dark gray/black */
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Hover button */
+.generic-form .btn:hover {
+  background-color: #1f2937; /* slightly lighter dark gray */
+}
+
+/* Map preview container */
+.map-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Map itself: smaller preview for form */
+.map-preview .map-wrapper {
+  width: 100%;
+  max-width: 350px;
+  height: 200px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Confirm location button */
+.confirm-location-btn {
+  padding: 0.5rem 0.75rem;
+  background-color: #3b82f6; /* blue */
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.confirm-location-btn:hover {
+  background-color: #2563eb; /* darker blue */
+}
+
+/* Optional: responsive */
+@media (max-width: 500px) {
+  .generic-form {
+      max-width: 100%;
+      padding: 0.75rem;
+  }
+
+  .map-preview .map-wrapper {
+      max-width: 100%;
+  }
+}

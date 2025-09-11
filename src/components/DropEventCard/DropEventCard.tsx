@@ -3,6 +3,7 @@ import { DropEvent } from "../../model/DropEvent"
 import { handleAttendDropEvent } from "../../services/dropEventsService";
 import { Popup } from "../Popup/Popup";
 import "./DropEventCard.css";
+import { shortenAddress } from "../Utils/Helpers";
 
 export interface DropEventCardProps{
     dropEvent:  DropEvent
@@ -39,26 +40,33 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent}) => {
     const eventCardBodyPopup = () => {
         return (
           <div className="popup-content">
-            <div className="field">
-              <span className="label">City:</span>
-              <span className="value">{dropEvent.city}</span>
-            </div>
+            
             <div className="field">
               <span className="label">Location:</span>
-              <span className="value">{dropEvent.locationName}</span>
+              <span className="value">{shortenAddress(dropEvent.location)}</span>
             </div>
+
             <div className="field">
               <span className="label">Sport:</span>
-              <span className="value">{dropEvent.sportType}</span>
+              <span className="value">{dropEvent.sport}</span>
             </div>
             <div className="field">
-              <span className="label">Max Players:</span>
-              <span className="value">{dropEvent.maxPlayers}</span>
+              <span className="label">Details:</span>
+              <span className="value">{dropEvent.eventDetails}</span>
             </div>
             <div className="field">
-              <span className="label">Current Player Count:</span>
-              <span className="value">{dropEvent.currentPlayers}</span>
+              <span className="label">Player Count:</span>
+              <span className="value">{dropEvent.currentPlayers} / {dropEvent.maxPlayers}</span>
             </div>
+
+            {dropEvent.attendees && dropEvent.attendees.length > 0 && <div className="attendeesContainer">
+              <span className="label">Others going:</span>
+                {dropEvent.attendees.map( (attendee, index) =>{
+                  return (<div className="attendeeItem" key={index}>{attendee.username}</div>)
+                }
+            )}
+
+            </div>}
           </div>
         );
       };
@@ -77,9 +85,9 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent}) => {
         <Popup title={dropEvent.eventName} isOpen={showPopup} setClose={handleClosePopup} children={eventCardBodyPopup()} footer={GetEventCardFooter()}></Popup>
 
         <img src={image} alt="Location 1"/>
-        <h5>{dropEvent.eventName}</h5>
-        <h6>{dropEvent.date.toLocaleString()}</h6>
-        <h6>{dropEvent.sportType}</h6>
+        <h5>{shortenAddress(dropEvent.location)}</h5>
+        <h6>{dropEvent.date}</h6>
+        <h6>{dropEvent.sport}</h6>
         <h6>Organized by: {dropEvent.organizerName}</h6>
 
         <div className="card-footer">Im Interested</div>

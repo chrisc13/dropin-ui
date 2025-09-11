@@ -10,7 +10,7 @@ import { FormFields } from "../../../types/FormFields";
 import { Popup } from "../../../components/Popup/Popup";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../../../context/AuthContext";
-
+import { CreateEventForm } from "../../../components/Form/CreateEventForm";
 export const Home = () =>{
     const [events, setEvents] = useState<DropEvent[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -32,9 +32,10 @@ export const Home = () =>{
       }, []);
 
     const initialDropEvent: FormFields<DropEvent> = {
-      sportType: '',
-      city: '',
-      date: new Date(),
+      sport: '',
+      eventDetails: '',
+      location: '',
+      start: new Date(),
       maxPlayers: 0
     };
     
@@ -45,18 +46,19 @@ export const Home = () =>{
     const handleCreateEventSubmit = async (values: FormFields<DropEvent>) => {
       const newEvent: DropEvent = {
         eventName: values.eventName || "",
-        sportType: values.sportType || "",
-        locationName: values.locationName || "",
-        city: values.city || "",
-        date: values.date || new Date(),
-        startTime: values.startTime || "",
-        endTime: values.endTime || "",
+        eventDetails: values.eventDetails || "",
+        sport: values.sport || "",
+        location: values.location || "",
+        locationDetails: values.locationDetails || "",
+        start: values.date || new Date(),
+        end: values.date || new Date(),
         maxPlayers: values.maxPlayers || 0,
         currentPlayers: values.currentPlayers || 0,
+        attendees: values.attendees || [],
         organizerName: "",
         organizerId: "",
         latitude: values.latitude || 0,
-        longitude: values.longitude || 0,
+        longitude: values.longitude || 0
       };
     
       console.log('Submitted', values);
@@ -105,9 +107,20 @@ export const Home = () =>{
                     </div>
                     <button className="create-event-button" onClick={e => setShowCreateEventPopup(true)}>Create Event</button>
                 </div>
-                {showCreateEventPopup && <Popup title={"Create Event"} isOpen={showCreateEventPopup} setClose={handleClosePopup} footer={GetCreateEventFormFooter()}>
-                  {GetCreateEventForm()}
-                  </Popup>}
+                {showCreateEventPopup && (
+                  <Popup
+                    title="Create Event"
+                    isOpen={showCreateEventPopup}
+                    setClose={() => setShowCreateEventPopup(false)}
+                    footer={GetCreateEventFormFooter()}
+                  >
+                    <CreateEventForm
+                      initialValues={initialDropEvent}
+                      onSubmit={handleCreateEventSubmit}
+                      formId="create-event-form"
+                    />
+                  </Popup>
+                )}
                 {!isLoading ? <div className="event-cards-wrapper">
                 {events.map((e, index) => {
                     return <DropEventCard dropEvent={e} key={index}></DropEventCard>
@@ -118,7 +131,7 @@ export const Home = () =>{
                 <h2>Up for a pickup game? Search for a nearby session and drop in.</h2>
             </div>
             <div className="body-wrapper">
-                <MapComponent></MapComponent>
+                <MapComponent latitude={33.46156025} longitude={-112.32191100688232} displayName="Phoenix"></MapComponent>
             </div>
         </React.Fragment>
     )
