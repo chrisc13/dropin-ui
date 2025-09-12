@@ -1,0 +1,71 @@
+.top-wrapper{
+    height: 600px;
+    background-color: #202020;
+}
+
+.top-wrapper > h1, h2{
+    color: white;
+    text-align: center;
+    margin-top: auto;
+}
+
+.top-wrapper > h2{
+    padding-top: 150px;
+}
+
+.top-banner{
+    display: flex;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 8%;
+    justify-content: space-between;
+}
+
+.banner-text{
+    font-size: 26px;
+    color: white;
+}
+
+.create-event-button{
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+    background-color: rgb(174, 174, 176);
+    border-radius: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 6px;
+}
+.create-event-button:hover{
+    cursor: pointer;
+}
+.event-cards-wrapper {
+    display: flex;
+    gap: 1rem;
+    padding: 4% 2%;
+    overflow-x: auto;          /* allow horizontal scroll */
+    scroll-snap-type: x mandatory; /* snap to each card */
+}
+
+.event-cards-wrapper > * {
+    flex: 0 0 300px;            /* card width */
+    scroll-snap-align: start;   /* snap start of each card */
+}
+
+/* For screens wider than 720px, show multiple cards normally */
+@media (min-width: 721px) {
+    .event-cards-wrapper {
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        overflow-x: visible;
+    }
+
+    .event-cards-wrapper > * {
+        flex: 0 0 auto; /* allow flexible sizing */
+    }
+}
+
+/* Optional: hide scrollbar on mobile */
+.event-cards-wrapper::-webkit-scrollbar {
+    display: none;
+}

@@ -2,7 +2,7 @@ import { DropEvent } from "../model/DropEvent";
 
 const getDropEvents = async (): Promise<DropEvent[]> => {
     try {
-      const response = await fetch("http://localhost:5084/Event/GetTopThreePopularEvents");
+      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Event/GetTopThreePopularEvents");
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
       }
@@ -15,11 +15,13 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
   };
 
   const createDropEvent = async (dropEvent: DropEvent): Promise<boolean> => {
+    const token = sessionStorage.getItem("accessToken");
     try {
-      const response = await fetch("http://localhost:5084/Event/CreateEvent",{
+      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Event/CreateEvent",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(dropEvent),
       });
@@ -27,7 +29,30 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
       }
-      const data = await response.json();
+      await response.json();
+      return true;
+    } catch (error) {
+      console.error("Fetch error:", error);
+      throw error; // Re-throw the error after logging
+    }
+  };
+
+  const attendDropEvent = async (eventId: string): Promise<boolean> => {
+    const token = sessionStorage.getItem("accessToken");
+    try {
+      const response = await fetch(`https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Event/${eventId}/Attendees`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({}), // send an empty object if you don't have extra data
+      });
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status}`);
+      }
+      await response.json();
       return true;
     } catch (error) {
       console.error("Fetch error:", error);
@@ -39,6 +64,10 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
     return await createDropEvent(dropEvent);
   }
   
+  export const handleAttendDropEvent = async(eventId: string):Promise<boolean> => {
+    return await attendDropEvent(eventId);
+  }
+
   export const handleGetDropEvents = async (): Promise<DropEvent[]> => {
     return await getDropEvents();
   };

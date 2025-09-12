@@ -1,6 +1,18 @@
 .map-wrapper{
     position: relative;
 }
+.map-preview {
+  height: 200px;
+  width: 100%; /* viewport width */
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+
+.map-full {
+  height: 400px;
+  width: 100%;
+}
 
 .map-search {
     position: absolute; 
@@ -24,4 +36,19 @@
 }
  .leaflet-bottom{
   z-index: 500;
+}
+/* Target zoom controls inside a specific map preview */
+.map-preview .leaflet-control-zoom {
+  left: -10px !important;     /* distance from left of map */
+  z-index: 500;              /* ensure it's above map tiles */
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  width: 200px; /* set your desired width */
+  padding: 8px; /* optional */
+}
+
+.custom-popup .leaflet-popup-content {
+  margin-left: 10px; /* shift text inside the popup */
+  text-align: left;  /* optional */
 }

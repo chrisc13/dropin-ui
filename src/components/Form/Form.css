@@ -13,7 +13,42 @@
     margin-bottom: 1rem;
     color: #333;
   }
-  
+  .form-input.readonly,
+  .form-input-number.readonly {
+  background-color: #f3f3f3; /* light gray */
+  color: #666; /* dimmed text */
+  border: 1px solid #ccc;
+  cursor: not-allowed;
+  }
+
+.form-checkbox:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.edit-profile-top{
+  display: flex;
+  justify-content: center;
+}
+.save-profile-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.save-profile-btn{
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.save-profile-btn{
+  background-color: #404967;
+}
+
   .form-group {
     display: flex;
     flex-direction: column;
@@ -27,7 +62,7 @@
     text-transform: capitalize;
   }
   
-  .form-input {
+  .form-input, .form-input-number {
     padding: 0.6rem 0.8rem;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -35,11 +70,16 @@
     transition: border 0.2s;
   }
   
-  .form-input:focus {
+  .form-input:focus, .form-input-number:focus {
     border-color: #007bff;
     outline: none;
   }
   
+  .form-input-number{
+    width: 10%;
+  }
+
+
   .form-button {
     width: 100%;
     padding: 0.8rem;

@@ -1,0 +1,39 @@
+.profile-badge {
+    display: flex;
+    align-items: center;
+    background-color: #fbbf24; /* amber/yellow */
+    color: #1f2937; /* dark gray */
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-left: 1rem;
+    position: relative;
+    height: 25px;
+    margin-top: 5px;
+    margin-right: 5px;;
+  }
+  
+  .profile-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  
+  .badge-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #ef4444; /* red */
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* simple pulsing animation for attention */
+  @keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.7; }
+  }
+  

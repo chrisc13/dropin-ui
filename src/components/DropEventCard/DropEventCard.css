@@ -8,6 +8,12 @@
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
+  .card-wrapper.attending{
+    border: solid 5px rgb(63, 137, 63)
+  }
+  .card-wrapper:hover{
+    cursor: pointer;
+}
 
   .card-wrapper img {
     height: 150px; 
@@ -32,8 +38,9 @@
     flex-shrink: 0;
   }
 
-  .card-button{
+  .card-footer{
     color: white;
+    text-align: center;
     margin: 0;
     margin-bottom: 0%;
     width: 100%;
@@ -73,3 +80,33 @@
   color: #6b7280; /* gray-500 */
 }
 
+.attendeesContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px
+}
+.attendeesContainer.label{
+  margin-right: 2%;
+}
+
+.attendeeItem {
+  width: 15%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease;
+  margin-left: 1%;
+  text-align: center;
+}
+
+.attendeeItem:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}

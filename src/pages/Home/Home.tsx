@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react"
 import './Home.css';
-import { DropEvent } from "../../../model/DropEvent";
-import { DropEventCard } from "../../../components/DropEventCard/DropEventCard";
+import { DropEvent } from "../../model/DropEvent";
+import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
 //import { SampleDropEvents } from "../../../model/SampleDropEvents";
-import MapComponent from "../../../components/Map/MapComponent";
-import { handleGetDropEvents, handleCreateDropEvent } from "../../../services/dropEventsService";
-import { GenericForm } from "../../../components/Form/Form";
-import { FormFields } from "../../../types/FormFields";
-import { Popup } from "../../../components/Popup/Popup";
-import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
+import MapComponent from "../../components/Map/MapComponent";
+import { handleGetDropEvents, handleCreateDropEvent } from "../../services/dropEventsService";
+import { GenericForm } from "../../components/Form/Form";
+import { FormFields } from "../../types/FormFields";
+import { Popup } from "../../components/Popup/Popup";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import { useAuth } from "../../context/AuthContext";
+import { CreateEventForm } from "../../components/Form/CreateEventForm";
 
 export const Home = () =>{
     const [events, setEvents] = useState<DropEvent[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showCreateEventPopup, setShowCreateEventPopup] = useState<boolean>(false);
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -30,9 +33,11 @@ export const Home = () =>{
       }, []);
 
     const initialDropEvent: FormFields<DropEvent> = {
-      event_name: '',
-      location_name: '',
-      max_players: ''
+      sport: '',
+      eventDetails: '',
+      location: '',
+      start: new Date(),
+      maxPlayers: 0
     };
     
     const handleClosePopup = () => {
@@ -41,20 +46,20 @@ export const Home = () =>{
 
     const handleCreateEventSubmit = async (values: FormFields<DropEvent>) => {
       const newEvent: DropEvent = {
-        event_id: crypto.randomUUID(),
-        event_name: values.event_name || "",
-        sport_type: values.sport_type || "",
-        location_name: values.location_name || "",
-        city: values.city || "",
-        date: values.date || "",
-        start_time: values.start_time || "",
-        end_time: values.end_time || "",
-        max_players: values.max_players || "",
-        current_players: "0",
-        organizer_name: values.organizer_name || "",
-        organizer_ui: values.organizer_ui || "",
-        latitude: values.latitude || "",
-        longitude: values.longitude || "",
+        eventName: values.eventName || "",
+        eventDetails: values.eventDetails || "",
+        sport: values.sport || "",
+        location: values.location || "",
+        locationDetails: values.locationDetails || "",
+        start: values.date || new Date(),
+        end: values.date || new Date(),
+        maxPlayers: values.maxPlayers || 0,
+        currentPlayers: values.currentPlayers || 1,
+        attendees: values.attendees || [],
+        organizerName: "",
+        organizerId: "",
+        latitude: values.latitude || 0,
+        longitude: values.longitude || 0
       };
     
       console.log('Submitted', values);
@@ -71,18 +76,6 @@ export const Home = () =>{
       }
     };
     
-    
-    const GetCreateEventForm = () => {
-      return (
-        <GenericForm<DropEvent>
-          formId="create-event-form"
-          initialValues={initialDropEvent}
-          onSubmit={handleCreateEventSubmit}
-        />
-      );
-    };
-    
-
     const GetCreateEventFormFooter = () =>{
       return <button
                 className="btn"
@@ -97,13 +90,25 @@ export const Home = () =>{
             <div className="top-wrapper">
                 <div className="top-banner">
                     <div className="banner-text">
+                    Hello {user?.username}! 
                     What's happening nearby:
                     </div>
                     <button className="create-event-button" onClick={e => setShowCreateEventPopup(true)}>Create Event</button>
                 </div>
-                {showCreateEventPopup && <Popup title={"Create Event"} isOpen={showCreateEventPopup} setClose={handleClosePopup} footer={GetCreateEventFormFooter()}>
-                  {GetCreateEventForm()}
-                  </Popup>}
+                {showCreateEventPopup && (
+                  <Popup
+                    title="Create Event"
+                    isOpen={showCreateEventPopup}
+                    setClose={() => setShowCreateEventPopup(false)}
+                    footer={GetCreateEventFormFooter()}
+                  >
+                    <CreateEventForm
+                      initialValues={initialDropEvent}
+                      onSubmit={handleCreateEventSubmit}
+                      formId="create-event-form"
+                    />
+                  </Popup>
+                )}
                 {!isLoading ? <div className="event-cards-wrapper">
                 {events.map((e, index) => {
                     return <DropEventCard dropEvent={e} key={index}></DropEventCard>
@@ -114,7 +119,7 @@ export const Home = () =>{
                 <h2>Up for a pickup game? Search for a nearby session and drop in.</h2>
             </div>
             <div className="body-wrapper">
-                <MapComponent></MapComponent>
+                <MapComponent latitude={33.46156025} longitude={-112.32191100688232} displayName="Phoenix"></MapComponent>
             </div>
         </React.Fragment>
     )
