@@ -75,18 +75,6 @@ export const Home = () =>{
       }
     };
     
-    
-    const GetCreateEventForm = () => {
-      return (
-        <GenericForm<DropEvent>
-          formId="create-event-form"
-          initialValues={initialDropEvent}
-          onSubmit={handleCreateEventSubmit}
-        />
-      );
-    };
-    
-
     const GetCreateEventFormFooter = () =>{
       return <button
                 className="btn"
@@ -102,7 +90,7 @@ export const Home = () =>{
             <button onClick={logout}>Logout</button>
                 <div className="top-banner">
                     <div className="banner-text">
-                    Hello {user?.username}!
+                    Hello {user?.username}! 
                     What's happening nearby:
                     </div>
                     <button className="create-event-button" onClick={e => setShowCreateEventPopup(true)}>Create Event</button>

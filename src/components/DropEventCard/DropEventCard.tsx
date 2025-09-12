@@ -4,6 +4,7 @@ import { handleAttendDropEvent } from "../../services/dropEventsService";
 import { Popup } from "../Popup/Popup";
 import "./DropEventCard.css";
 import { shortenAddress } from "../Utils/Helpers";
+import { Link } from 'react-router-dom';
 
 export interface DropEventCardProps{
     dropEvent:  DropEvent
@@ -58,11 +59,11 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent}) => {
               <span className="label">Player Count:</span>
               <span className="value">{dropEvent.currentPlayers} / {dropEvent.maxPlayers}</span>
             </div>
-
+            
             {dropEvent.attendees && dropEvent.attendees.length > 0 && <div className="attendeesContainer">
               <span className="label">Others going:</span>
                 {dropEvent.attendees.map( (attendee, index) =>{
-                  return (<div className="attendeeItem" key={index}>{attendee.username}</div>)
+                  return (<Link className="attendeeItem" key={index} to="/profile">{attendee.username}</Link>)
                 }
             )}
 
