@@ -63,7 +63,13 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent}) => {
             {dropEvent.attendees && dropEvent.attendees.length > 0 && <div className="attendeesContainer">
               <span className="label">Others going:</span>
                 {dropEvent.attendees.map( (attendee, index) =>{
-                  return (<Link className="attendeeItem" key={index} to="/profile">{attendee.username}</Link>)
+                  return (<Link
+                    className="attendeeItem"
+                    key={index}
+                    to={`/profile/${attendee.username}`}
+                  >
+                    {attendee.username}
+                  </Link>)
                 }
             )}
 

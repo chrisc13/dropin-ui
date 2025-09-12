@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Home } from "./Home/Home";
+import { Home } from "../Home/Home";
 import "./Welcome.css";
 import { handleRegisterRequest, handleLoginRequest } from "../../services/authService";
 import { AuthRequest, User } from "../../model/User";

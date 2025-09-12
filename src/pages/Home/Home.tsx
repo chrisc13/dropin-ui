@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react"
 import './Home.css';
-import { DropEvent } from "../../../model/DropEvent";
-import { DropEventCard } from "../../../components/DropEventCard/DropEventCard";
+import { DropEvent } from "../../model/DropEvent";
+import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
 //import { SampleDropEvents } from "../../../model/SampleDropEvents";
-import MapComponent from "../../../components/Map/MapComponent";
-import { handleGetDropEvents, handleCreateDropEvent } from "../../../services/dropEventsService";
-import { GenericForm } from "../../../components/Form/Form";
-import { FormFields } from "../../../types/FormFields";
-import { Popup } from "../../../components/Popup/Popup";
-import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
-import { useAuth } from "../../../context/AuthContext";
-import { CreateEventForm } from "../../../components/Form/CreateEventForm";
+import MapComponent from "../../components/Map/MapComponent";
+import { handleGetDropEvents, handleCreateDropEvent } from "../../services/dropEventsService";
+import { GenericForm } from "../../components/Form/Form";
+import { FormFields } from "../../types/FormFields";
+import { Popup } from "../../components/Popup/Popup";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import { useAuth } from "../../context/AuthContext";
+import { CreateEventForm } from "../../components/Form/CreateEventForm";
+
 export const Home = () =>{
     const [events, setEvents] = useState<DropEvent[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +54,7 @@ export const Home = () =>{
         start: values.date || new Date(),
         end: values.date || new Date(),
         maxPlayers: values.maxPlayers || 0,
-        currentPlayers: values.currentPlayers || 0,
+        currentPlayers: values.currentPlayers || 1,
         attendees: values.attendees || [],
         organizerName: "",
         organizerId: "",
@@ -87,7 +88,6 @@ export const Home = () =>{
     return(
         <React.Fragment>
             <div className="top-wrapper">
-            <button onClick={logout}>Logout</button>
                 <div className="top-banner">
                     <div className="banner-text">
                     Hello {user?.username}! 

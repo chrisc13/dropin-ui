@@ -1,0 +1,105 @@
+/* ProfilePage.css */
+
+/* Main container */
+.profile-page {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #f9fafb; /* light gray background */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Heading */
+  .profile-page h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #111827;
+  }
+  
+  /* Avatar image */
+  .profile-page img {
+    display: block;
+    margin: 0 auto 1rem;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #3b82f6; /* blue border */
+  }
+  
+  /* Paragraphs */
+  .profile-page p {
+    font-size: 16px;
+    margin: 0.5rem 0;
+    color: #374151; /* medium gray */
+  }
+  
+  /* Sports list */
+  .profile-page ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.5rem 0 1rem 0;
+  }
+  
+  .profile-page li {
+    font-size: 14px;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #e5e7eb; /* light border */
+  }
+  
+  /* Edit profile button */
+  .profile-page button {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 0.6rem 1.2rem;
+    background-color: #3b82f6; /* blue */
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 14px;
+  }
+  
+  .profile-page button:hover {
+    background-color: #2563eb; /* darker blue */
+  }
+  
+  /* Loading / error text */
+  .profile-page p.loading {
+    text-align: center;
+    color: #6b7280; /* gray */
+  }
+  
+  .profile-page p.error {
+    text-align: center;
+    color: #ef4444; /* red */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 500px) {
+    .profile-page {
+      margin: 1rem;
+      padding: 0.75rem;
+    }
+  
+    .profile-page h1 {
+      font-size: 20px;
+    }
+  
+    .profile-page p,
+    .profile-page li {
+      font-size: 14px;
+    }
+  
+    .profile-page button {
+      font-size: 13px;
+      padding: 0.5rem 1rem;
+    }
+  }
+  

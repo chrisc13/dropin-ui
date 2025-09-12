@@ -2,7 +2,7 @@ import { AuthRequest, User } from "../model/User";
 
 const login = async (loginRequest: AuthRequest): Promise<User> => {
     try {
-      const response = await fetch("http://localhost:5084/Authentication/Login",{
+      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Authentication/Login",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ const login = async (loginRequest: AuthRequest): Promise<User> => {
 
   const register = async (registerRequest: AuthRequest): Promise<boolean> => {
     try {
-      const response = await fetch("http://localhost:5084/Authentication/Register",{
+      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Authentication/Register",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

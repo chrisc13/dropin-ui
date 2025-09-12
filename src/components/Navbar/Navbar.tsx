@@ -1,29 +1,54 @@
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileBadge from "../Profile/ProfileBadge";
 import "./Navbar.css";
+import { useAuth } from "../../context/AuthContext";
 
 interface NavbarProps {
   show?: boolean;
-  isLoggedIn: boolean;
-  profileIncomplete?: boolean; // add this to show badge
+  profileIncomplete?: boolean; // controls badge
   onProfileClick?: () => void; // callback when user clicks badge
 }
 
-const Navbar = ({ show = true, isLoggedIn, profileIncomplete = true, onProfileClick }: NavbarProps) => {
-  if (!show) return null; // hide navbar
+const Navbar = ({
+  show = true,
+  profileIncomplete = true,
+  onProfileClick,
+}: NavbarProps) => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth(); // get auth state and logout
+
+  if (!show) return null;
+
+  const handleLogout = () => {
+    logout(); // clears sessionStorage and context
+    navigate("/"); // redirect to login page
+  };
+
+  const isLoggedIn = !!user;
 
   return (
-    <div className="nav-bar">
-      <div className="logo">Drop In</div>
-      <ul>
-        {!isLoggedIn && <li>Log In</li>}
-      </ul>
+<div className="nav-bar">
+  <Link to="/Home" className="logo">
+    Drop In
+  </Link>
 
-      {isLoggedIn && (
-        <ProfileBadge
-          incomplete={profileIncomplete}
-        />
-      )}
-    </div>
+  <ul>
+    {isLoggedIn ? (
+      <>
+        <li>
+          <ProfileBadge
+            incomplete={profileIncomplete}
+          />
+        </li>
+        <li className="logOutBtn" onClick={handleLogout}>Log Out</li>
+      </>
+    ) : (
+      <li className="logInBtn" onClick={() => navigate("/")}>Log In</li>
+    )}
+  </ul>
+</div>
+
   );
 };
 

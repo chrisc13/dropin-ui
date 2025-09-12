@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    sessionStorage.removeItem("accessToken");
   };
-
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

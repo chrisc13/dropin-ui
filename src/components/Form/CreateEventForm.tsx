@@ -48,7 +48,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
 
       try {
         const res = await fetch(
-          `http://localhost:5084/api/Location/geocode?address=${encodeURIComponent(value)}`
+          `https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/api/Location/geocode?address=${encodeURIComponent(value)}`
         );
         const data = await res.json();
 

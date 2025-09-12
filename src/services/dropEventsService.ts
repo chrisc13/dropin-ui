@@ -2,7 +2,7 @@ import { DropEvent } from "../model/DropEvent";
 
 const getDropEvents = async (): Promise<DropEvent[]> => {
     try {
-      const response = await fetch("http://localhost:5084/Event/GetTopThreePopularEvents");
+      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Event/GetTopThreePopularEvents");
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
       }
@@ -17,7 +17,7 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
   const createDropEvent = async (dropEvent: DropEvent): Promise<boolean> => {
     const token = sessionStorage.getItem("accessToken");
     try {
-      const response = await fetch("http://localhost:5084/Event/CreateEvent",{
+      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Event/CreateEvent",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
   const attendDropEvent = async (eventId: string): Promise<boolean> => {
     const token = sessionStorage.getItem("accessToken");
     try {
-      const response = await fetch(`http://localhost:5084/Event/${eventId}/Attendees`,{
+      const response = await fetch(`https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Event/${eventId}/Attendees`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
