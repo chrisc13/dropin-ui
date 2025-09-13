@@ -90,10 +90,9 @@ export const Home = () =>{
             <div className="top-wrapper">
                 <div className="top-banner">
                     <div className="banner-text">
-                    Hello {user?.username}! 
                     What's happening nearby:
                     </div>
-                    <button className="create-event-button" onClick={e => setShowCreateEventPopup(true)}>Create Event</button>
+                    {user && <button className="create-event-button" onClick={e => setShowCreateEventPopup(true)}>Create Event</button>}
                 </div>
                 {showCreateEventPopup && (
                   <Popup
@@ -111,7 +110,7 @@ export const Home = () =>{
                 )}
                 {!isLoading ? <div className="event-cards-wrapper">
                 {events.map((e, index) => {
-                    return <DropEventCard dropEvent={e} key={index}></DropEventCard>
+                    return <DropEventCard dropEvent={e} key={index} isLoggedIn={!!user}></DropEventCard>
                 })}
                 </div>
                 : <LoadingSpinner></LoadingSpinner>

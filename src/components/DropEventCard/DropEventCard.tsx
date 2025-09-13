@@ -5,14 +5,17 @@ import { Popup } from "../Popup/Popup";
 import "./DropEventCard.css";
 import { shortenAddress } from "../Utils/Helpers";
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export interface DropEventCardProps{
-    dropEvent:  DropEvent
+    dropEvent:  DropEvent,
+    isLoggedIn: boolean
 }
 
-export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent}) => {
+export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLoggedIn}) => {
     const [showPopup, setShowPopup] = useState(false);
     const [isAnAttendee, setIsAnAttendee] = useState(false)
+    const navigate = useNavigate();
 
     const randomSampleImage = () =>{
         let images = ["soccer1.jpg", "running3.jpg", "football1.jpg"]
@@ -79,11 +82,23 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent}) => {
       };
       
     const GetEventCardFooter = () =>{
-      return <button
+      return isLoggedIn ? <button
                 className="btn"
                 onClick={e => {handleAttendClick() ;  e.stopPropagation(); setShowPopup(false)}}
               >Going!
-            </button>
+            </button> :   (
+    <div className="login-footer">
+      <span
+        className="login-link-alert"
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate("/welcome");
+        }}
+      >
+        Sign in to Attend
+      </span>
+    </div>
+  );
     } 
 
 
