@@ -1,38 +1,83 @@
-.nav-bar{
-    top: 0;
-    position: sticky;
-    height: 75px;
+.nav-bar {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
     background-color: #202020;
-}
-.logOutBtn, .logInBtn{
     color: white;
+    position: relative;
+  }
+  
+  .nav-bar .logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+  .logOutBtn, .logInBtn{
     background-color: rgb(70, 70, 114);
     border-radius: 25px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 6px;
-}
-.nav-bar.hide {
-  display: none;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 16px;
   }
   
-.logo{
-    color: white;
-    padding: 20px;
-    font-size: 30px;
-}
-
-.nav-bar ul{
-    list-style-type: none;
-    display: flex;
-    padding: 0;
-    margin: 0;
-    padding: 20px;
-}
-li{
+  .nav-links li {
     cursor: pointer;
-}
+  }
+  
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  /* Mobile Styles */
+  @media screen and (max-width: 720px) {
+    .hamburger {
+      display: block;
+    }
+    .logOutBtn, .logInBtn{
+        text-align: right;
+        align-items: right;
+
+      }
+    .nav-links {
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: #202020;
+      width: 100px;
+      padding: 10px;
+      display: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  
+    .nav-links.active {
+      display: flex;
+    }
+  
+    .nav-links li {
+      padding: 10px 0;
+      border-bottom: 1px solid #444;
+    }
+  
+    .nav-links li:last-child {
+      border-bottom: none;
+      text-align: center;
+    }
+  }
+  

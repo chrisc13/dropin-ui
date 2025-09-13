@@ -110,3 +110,18 @@
   background-color: #f0f0f0;
   cursor: pointer;
 }
+.login-link-alert {
+  display: inline-block;
+  color: black;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.login-link-alert:hover {
+  transform: scale(1.05);
+}

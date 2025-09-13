@@ -4,8 +4,9 @@ import "./Welcome.css";
 import { handleRegisterRequest, handleLoginRequest } from "../../services/authService";
 import { AuthRequest, User } from "../../model/User";
 import { useAuth } from "../../context/AuthContext"; // hook to access context
+import { useNavigate } from "react-router-dom";
+import { Attribution } from "../../components/Attribution";
 
-    
 const Welcome: React.FC = () =>{
     const { user, login } = useAuth(); // get login function from context
 
@@ -16,7 +17,7 @@ const Welcome: React.FC = () =>{
     const [showRegister, setShowRegister] = useState(false)
     const [showLogin, setShowLogin] = useState(true)
     const [error, setError] = useState<string | null>(null);
-
+    const navigate = useNavigate();
 
     const switchToRegister = () => {
       setShowLogin(false);
@@ -30,7 +31,7 @@ const Welcome: React.FC = () =>{
 
     const handleLogin = async () => {
       const loginRequest: AuthRequest = {
-        username: username,
+        username: username.toLowerCase(),
         password: password
       }
 
@@ -38,6 +39,8 @@ const Welcome: React.FC = () =>{
         const loggedInUser = await handleLoginRequest(loginRequest);
         login(loggedInUser); 
         setLoading(false);
+        navigate("/home", { replace: true }); 
+
       } catch (error: any) {
         if (error.message === "Invalid credentials") {
           setError("Username or password is incorrect");
@@ -50,7 +53,7 @@ const Welcome: React.FC = () =>{
 
     const handleRegister = async () => {
       const registerRequest: AuthRequest = {
-        username: username,
+        username: username.toLowerCase(),
         password: password
       }
 
@@ -187,19 +190,20 @@ const Welcome: React.FC = () =>{
                 <h2 className="bottom-text">Why Drop In?</h2>
                 <div className="features">
                   <div className="feature-card">
-                    <img src="images/dropinMock.png" alt="Feature 1" />
+                    <img className="white-icon" src="images/sports.png" alt="Feature 1" />
                     <p>Quickly find local games happening near you and join instantly.</p>
                   </div>
                   <div className="feature-card">
-                    <img src="images/dropinMock.png" alt="Feature 2" />
+                    <img className="white-icon" src="images/support.png" alt="Feature 2" />
                     <p>Connect with workout buddies and friends who share your schedule.</p>
                   </div>
                   <div className="feature-card">
-                    <img src="images/dropinMock.png" alt="Feature 3" />
+                    <img className="white-icon" src="images/reminder.png" alt="Feature 3" />
                     <p>Plan ahead with event notifications and reminders for your favorite games.</p>
                   </div>
                 </div>
               </section>
+              <Attribution></Attribution>
             </div>
     
 }

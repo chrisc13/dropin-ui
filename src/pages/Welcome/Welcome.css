@@ -94,6 +94,11 @@
   .bottom-text{
     color: white;
   }
+  img.white-icon {
+    filter: brightness(0) invert(1);
+    height: 50%;
+    width: 50%;
+  }
   
   /* Responsive */
   @media(max-width: 768px){
