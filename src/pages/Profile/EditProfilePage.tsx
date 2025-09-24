@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Profile } from "../../model/Profile";
 import { FormFields } from "../../types/FormFields";
 import "./Profile.css";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 
 export const EditProfilePage: React.FC = () => {
   const { user } = useAuth();
@@ -20,8 +22,8 @@ export const EditProfilePage: React.FC = () => {
       setLoading(true);
       try {
         const url = usernameParam
-          ? `https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Profile/${usernameParam}`
-          : "https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Profile/me";
+          ?  `${API_BASE_URL}/Profile/${usernameParam}`
+          :  `${API_BASE_URL}/Profile/me`;
 
         const res = await fetch(url, {
           headers: {
@@ -59,7 +61,7 @@ export const EditProfilePage: React.FC = () => {
 
   const handleSubmit = async (values: FormFields<Profile>) => {
     try {
-      const res = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Profile/upsert", {
+      const res = await fetch( `${API_BASE_URL}/Profile/upsert`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
