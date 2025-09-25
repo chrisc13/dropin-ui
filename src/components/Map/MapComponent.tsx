@@ -5,8 +5,11 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import "./MapComponent.css";
-import { useState, useRef, useCallback } from 'react';
-
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { formatEventDate } from '../Utils/DateUtils';
+import { Popup as ModalPopup } from "../Popup/Popup";
+import { EventPopupBody } from '../Form/EventBodyPopup';
+import { EventFooter } from '../Form/EventFooter';
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 // Fix Leaflet's default icon paths for React + TypeScript
@@ -30,11 +33,24 @@ const RecenterMap: React.FC<{ lat: number; lng: number }> = ({ lat, lng }) => {
 };
 
 export const MapComponent: React.FC<MapProps> = ({ longitude, latitude, displayName, isPreview }) => {
-  const location: [number, number] = [latitude, longitude];
-
+  const [userLocation, setUserLocation] = useState<[number, number]>([latitude || 33.46, longitude || -112.32]);
+  const [selectedEvent, setSelectedEvent] = useState<any | null>(null); // selected event for modal
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+        },
+        (err) => {
+          console.warn("Geolocation denied or unavailable, using default location.");
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  }, []);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchText(value);
@@ -56,6 +72,9 @@ export const MapComponent: React.FC<MapProps> = ({ longitude, latitude, displayN
         const searchLat = parseFloat(geoData.lat);
         const searchLng = parseFloat(geoData.lng);
 
+        setUserLocation([searchLat, searchLng]);
+
+
         // 2️⃣ Fetch nearby events
         const eventsRes = await fetch(
           `${API_BASE_URL}/Event/nearby?maxDistanceMiles=50&latitude=${searchLat}&longitude=${searchLng}`
@@ -67,11 +86,12 @@ export const MapComponent: React.FC<MapProps> = ({ longitude, latitude, displayN
       } catch (err) {
         console.error("Search failed", err);
       }
-    }, 500); // 500ms debounce
+    }, 2500); // 500ms debounce
   }, []);
 
   const handleSearchButton = () => {
     handleSearchChange(searchText);
+
   };
 
   return (
@@ -90,12 +110,20 @@ export const MapComponent: React.FC<MapProps> = ({ longitude, latitude, displayN
           </button>
         </div>
       )}
-
+   {selectedEvent && (
+        <ModalPopup
+          title={selectedEvent.eventName}
+          isOpen={!!selectedEvent}
+          setClose={() => setSelectedEvent(null)}
+        >
+          <EventPopupBody dropEvent={selectedEvent}></EventPopupBody>
+        </ModalPopup>
+      )}
       
-
+      
       <MapContainer
-        center={location}
-        zoom={12}
+        center={userLocation}
+        zoom={11}
         className={isPreview ? "map-preview" : "map-full"}
         scrollWheelZoom={!isPreview}
         dragging={!isPreview}
@@ -104,18 +132,24 @@ export const MapComponent: React.FC<MapProps> = ({ longitude, latitude, displayN
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={location}>
-          <Popup className="custom-popup">{displayName}</Popup>
-        </Marker>
 
         {/* Nearby events markers */}
         {searchResults.map((event) => (
             <Marker key={event.id} position={[event.latitude, event.longitude]}>
-              <Popup className="custom-popup">{event.eventName}</Popup>
+              <Popup className="custom-popup">
+                  <div className="map-pin-container">
+                    <div><b>{event.sport}</b></div>
+                    <div>{formatEventDate(event.start)}</div>
+                    <button className="popup-button"  onClick={() => setSelectedEvent(event)}>
+                      View Event
+                    </button>
+                  </div>
+              </Popup>
             </Marker>
           ))}
-        {latitude !== 0 && longitude !== 0 && <RecenterMap lat={latitude} lng={longitude} />}
-      </MapContainer>
+          {userLocation[0] !== 0 && userLocation[1] !== 0 && (
+                    <RecenterMap lat={userLocation[0]} lng={userLocation[1]} />
+                  )}      </MapContainer>
     </div>
   );
 };

@@ -6,16 +6,17 @@ import "./DropEventCard.css";
 import { shortenAddress } from "../Utils/Helpers";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { EventPopupBody } from "../Form/EventBodyPopup";
+import { EventFooter } from "../Form/EventFooter";
 
 export interface DropEventCardProps{
     dropEvent:  DropEvent,
-    isLoggedIn: boolean
+    isLoggedIn: boolean, 
+    isAttending: boolean
 }
 
-export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLoggedIn}) => {
+export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLoggedIn, isAttending}) => {
     const [showPopup, setShowPopup] = useState(false);
-    const [isAnAttendee, setIsAnAttendee] = useState(false)
-    const navigate = useNavigate();
 
     const randomSampleImage = () =>{
         let images = ["soccer1.jpg", "running3.jpg", "football1.jpg"]
@@ -26,85 +27,19 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLogged
 
     const handleShowPopup = () => setShowPopup(true);
     const handleClosePopup = () => setShowPopup(false);
-    const handleAttendClick = () => {
-      const handleAttend = async () => {
-        try {
-          const data = await handleAttendDropEvent(dropEvent.id ?? "");
-          console.log(data)
-          setIsAnAttendee(true)
-          //setIsLoggedIn(true);
-          //setEvents(data);
-        } catch (error) {
-          console.error("Error register:", error);
-        }
-      };
-      handleAttend()
-    }
-
-    const eventCardBodyPopup = () => {
-        return (
-          <div className="popup-content">
-            
-            <div className="field">
-              <span className="label">Location:</span>
-              <span className="value">{shortenAddress(dropEvent.location)}</span>
-            </div>
-
-            <div className="field">
-              <span className="label">Sport:</span>
-              <span className="value">{dropEvent.sport}</span>
-            </div>
-            <div className="field">
-              <span className="label">Details:</span>
-              <span className="value">{dropEvent.eventDetails}</span>
-            </div>
-            <div className="field">
-              <span className="label">Player Count:</span>
-              <span className="value">{dropEvent.currentPlayers} / {dropEvent.maxPlayers}</span>
-            </div>
-            
-            {dropEvent.attendees && dropEvent.attendees.length > 0 && <div className="attendeesContainer">
-              <span className="label">Others going:</span>
-                {dropEvent.attendees.map( (attendee, index) =>{
-                  return (<Link
-                    className="attendeeItem"
-                    key={index}
-                    to={`/profile/${attendee.username}`}
-                  >
-                    {attendee.username}
-                  </Link>)
-                }
-            )}
-
-            </div>}
-          </div>
-        );
-      };
-      
-    const GetEventCardFooter = () =>{
-      return isLoggedIn ? <button
-                className="btn"
-                onClick={e => {handleAttendClick() ;  e.stopPropagation(); setShowPopup(false)}}
-              >Going!
-            </button> :   (
-    <div className="login-footer">
-      <span
-        className="login-link-alert"
-        onClick={(e) => {
-          e.stopPropagation();
-          navigate("/welcome");
-        }}
-      >
-        Sign in to Attend
-      </span>
-    </div>
-  );
-    } 
 
 
     const image = randomSampleImage();
-    return <div className={isAnAttendee ? "card-wrapper attending" : "card-wrapper"}  onClick={e => handleShowPopup()} >
-        <Popup title={dropEvent.eventName} isOpen={showPopup} setClose={handleClosePopup} children={eventCardBodyPopup()} footer={GetEventCardFooter()}></Popup>
+    return <div className={isAttending ? "card-wrapper attending" : "card-wrapper"} onClick={e => handleShowPopup()} >
+        <Popup title={dropEvent.eventName} isOpen={showPopup} setClose={handleClosePopup} children={<EventPopupBody dropEvent={dropEvent} />} 
+           footer={
+            <EventFooter
+              dropEvent={dropEvent}
+              isLoggedIn={isLoggedIn}
+              onClose={() => setShowPopup(false)}
+            />
+          }  
+      ></Popup>
 
         <img src={image} alt="Location 1"/>
         <h5>{shortenAddress(dropEvent.location)}</h5>

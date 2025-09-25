@@ -110,15 +110,17 @@ export const Home = () =>{
                 )}
                 {!isLoading ? <div className="event-cards-wrapper">
                 {events.map((e, index) => {
-                    return <DropEventCard dropEvent={e} key={index} isLoggedIn={!!user}></DropEventCard>
+                    const isAttending = e.attendees?.some(a => a.username.toLowerCase() === user?.username?.toLowerCase()) ?? false;
+                    return <DropEventCard dropEvent={e} key={index} isLoggedIn={!!user} isAttending={isAttending} // new prop
+                    ></DropEventCard>
                 })}
                 </div>
                 : <LoadingSpinner></LoadingSpinner>
                 }
-                <h2>Up for a pickup game? Search for a nearby session and drop in.</h2>
+                <h2 className="welcome-text">Up for a pickup game? Search for a nearby.</h2>
             </div>
             <div className="body-wrapper">
-                <MapComponent latitude={33.46156025} longitude={-112.32191100688232} displayName="Phoenix"></MapComponent>
+                <MapComponent latitude={33.46156025} longitude={-112.32191100688232} displayName="Phoenix" ></MapComponent>
             </div>
         </React.Fragment>
     )
