@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { Profile } from "../../model/Profile";
 import "./Profile.css";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export const ProfilePage: React.FC = () => {
   const { user: authUser } = useAuth(); // logged-in user
@@ -24,8 +25,8 @@ export const ProfilePage: React.FC = () => {
       try {
         const token = sessionStorage.getItem("accessToken");
         const url = isOwnProfile
-          ? "https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Profile/me"
-          : `https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Profile/${usernameParam}`;
+          ?  `${API_BASE_URL}/Profile/me`
+          :  `${API_BASE_URL}/Profile/${usernameParam}`;
 
         const res = await fetch(url, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},

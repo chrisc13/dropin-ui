@@ -1,8 +1,10 @@
 import { AuthRequest, User } from "../model/User";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 
 const login = async (loginRequest: AuthRequest): Promise<User> => {
     try {
-      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Authentication/Login",{
+      const response = await fetch(`${API_BASE_URL}/Authentication/Login`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ const login = async (loginRequest: AuthRequest): Promise<User> => {
 
   const register = async (registerRequest: AuthRequest): Promise<boolean> => {
     try {
-      const response = await fetch("https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/Authentication/Register",{
+      const response = await fetch(`${API_BASE_URL}/Authentication/Register`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

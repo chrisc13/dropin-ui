@@ -3,6 +3,7 @@ import { DropEvent } from "../../model/DropEvent";
 import { FormFields } from "../../types/FormFields";
 import MapComponent from "../Map/MapComponent";
 import "./CreateEventForm.css";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 interface CreateEventFormProps {
   initialValues: FormFields<DropEvent>;
@@ -48,7 +49,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
 
       try {
         const res = await fetch(
-          `https://drop-in-api-cjhmdwebdxb7e4bt.canadacentral-01.azurewebsites.net/api/Location/geocode?address=${encodeURIComponent(value)}`
+          `${API_BASE_URL}/api/Location/geocode?address=${encodeURIComponent(value)}`
         );
         const data = await res.json();
 

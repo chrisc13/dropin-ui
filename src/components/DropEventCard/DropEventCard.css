@@ -24,7 +24,6 @@
     flex-grow: 1;
     font-size: 1em;
     margin: 10px;
-    overflow: hidden;
     text-overflow: ellipsis;
   }
   

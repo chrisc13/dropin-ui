@@ -1,28 +1,36 @@
-.map-wrapper{
-    position: relative;
+.map-wrapper {
+  position: relative;
+  height: 100%; /* important for absolute children */
 }
+
 .map-preview {
   height: 200px;
   width: 100%; /* viewport width */
   max-width: 100%;
   border-radius: 8px;
+  padding-top: 50px;
 }
 
 
 .map-full {
   height: 400px;
   width: 100%;
+  padding-top: 50px;
+
 }
 
+
 .map-search {
-    position: absolute; 
-    top: 20px;
-    left: 50%; 
-    transform: translateX(-50%); 
-    background-color: white; 
-    z-index: 500; 
-    padding: 10px; 
-  }
+  position: absolute;
+  display: flex;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+}
 
   .map-search-input {
     width: 800px;
@@ -52,3 +60,38 @@
   margin-left: 10px; /* shift text inside the popup */
   text-align: left;  /* optional */
 }
+.map-pin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 150px;
+  min-height: 100px; /* ensures vertical space */
+}
+
+.map-pin-container > .popup-button {
+  margin-top: auto; /* pushes button to the bottom */
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.map-pin-container > .popup-button:hover {
+  background-color: #0056b3;
+}
+
+
+@media (max-width: 751px) {
+  
+  
+    .map-search-input {
+      width: 300px;
+      padding: 8px;
+    }
+  
+}
+

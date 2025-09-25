@@ -25,6 +25,9 @@
     font-size: 26px;
     color: white;
 }
+.welcome-text{
+    color: white;
+}
 
 .create-event-button{
     font-size: 18px;
@@ -51,7 +54,11 @@
     flex: 0 0 300px;            /* card width */
     scroll-snap-align: start;   /* snap start of each card */
 }
-
+.body-wrapper {
+    height: 25vh; /* 25% of viewport height */
+    width: 100%;
+    position: relative; /* if you have absolute elements inside */
+  }
 /* For screens wider than 720px, show multiple cards normally */
 @media (min-width: 721px) {
     .event-cards-wrapper {
