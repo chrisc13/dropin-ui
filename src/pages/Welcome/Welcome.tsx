@@ -31,8 +31,8 @@ const Welcome: React.FC = () =>{
 
     const handleLogin = async () => {
       const loginRequest: AuthRequest = {
-        username: username.toLowerCase(),
-        password: password
+        username: username.toLowerCase().trim(),
+        password: password.trim()
       }
 
       try {
@@ -53,8 +53,8 @@ const Welcome: React.FC = () =>{
 
     const handleRegister = async () => {
       const registerRequest: AuthRequest = {
-        username: username.toLowerCase(),
-        password: password
+        username: username.toLowerCase().trim(),
+        password: password.trim()
       }
 
       try {
@@ -74,9 +74,6 @@ const Welcome: React.FC = () =>{
 
     const handleSubmitLogin = () =>{
       setLoading(true);
-      console.log("Username:", username);
-      console.log("Password:", password);
-
       handleLogin()
     }
 

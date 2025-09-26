@@ -68,17 +68,13 @@ function AppContent() {
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
               <ProfilePage />
-            </ProtectedRoute>
           }
         />
         <Route
           path="/profile/:username"
           element={
-            <ProtectedRoute>
               <ProfilePage />
-            </ProtectedRoute>
           }
         />
         <Route

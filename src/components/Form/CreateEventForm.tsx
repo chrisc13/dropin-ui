@@ -2,7 +2,9 @@ import React, { useState, ChangeEvent, FormEvent, useCallback, useRef } from "re
 import { DropEvent } from "../../model/DropEvent";
 import { FormFields } from "../../types/FormFields";
 import MapComponent from "../Map/MapComponent";
+import { formatToLocalDate, toLocalInputDate, toUtcDateString } from "../Utils/DateUtils";
 import "./CreateEventForm.css";
+
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 interface CreateEventFormProps {
@@ -151,18 +153,19 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
       <div className="form-group">
         <label>Start Time</label>
         <input
-          type="datetime-local"
-          value={
-            formValues.start
-              ? new Date(formValues.start).toISOString().slice(0, 16)
-              : ""
-          }
-          onChange={(e) => handleChange("start", new Date(e.target.value))}
-        />
+            type="datetime-local"
+            value={
+              formValues.start ? toLocalInputDate(formValues.start) : ""
+            }
+            onChange={(e) => 
+              handleChange("start", toUtcDateString(e.target.value))
+            }
+          />
+
       </div>
 
       <div className="form-group">
-        <label>Max Players</label>
+        <label>Max Participants</label>
         <input
           type="number"
           value={formValues.maxPlayers || ""}

@@ -5,7 +5,6 @@ import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
 //import { SampleDropEvents } from "../../../model/SampleDropEvents";
 import MapComponent from "../../components/Map/MapComponent";
 import { handleGetDropEvents, handleCreateDropEvent } from "../../services/dropEventsService";
-import { GenericForm } from "../../components/Form/Form";
 import { FormFields } from "../../types/FormFields";
 import { Popup } from "../../components/Popup/Popup";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
@@ -51,7 +50,7 @@ export const Home = () =>{
         sport: values.sport || "",
         location: values.location || "",
         locationDetails: values.locationDetails || "",
-        start: values.date || new Date(),
+        start: values.start || new Date(),
         end: values.date || new Date(),
         maxPlayers: values.maxPlayers || 0,
         currentPlayers: values.currentPlayers || 1,
