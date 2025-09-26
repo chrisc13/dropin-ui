@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { EventPopupBody } from "../Form/EventBodyPopup";
 import { EventFooter } from "../Form/EventFooter";
+import { formatEventDate } from "../Utils/DateUtils";
 
 export interface DropEventCardProps{
     dropEvent:  DropEvent,
@@ -43,8 +44,7 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLogged
 
         <img src={image} alt="Location 1"/>
         <h5>{shortenAddress(dropEvent.location)}</h5>
-        <h6>{dropEvent.date}</h6>
-        <h6>{dropEvent.sport}</h6>
+        <h6>{dropEvent.sport} - {formatEventDate(dropEvent.start as any)}</h6>
         <h6>Organized by: {dropEvent.organizerName}</h6>
 
         <div className="card-footer">Im Interested</div>

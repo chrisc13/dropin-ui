@@ -117,7 +117,7 @@ export const Home = () =>{
                 </div>
                 : <LoadingSpinner></LoadingSpinner>
                 }
-                <h2 className="welcome-text">Up for a pickup game? Search for a nearby.</h2>
+                <h2 className="welcome-text">Up for a pickup game? Search nearby.</h2>
             </div>
             <div className="body-wrapper">
                 <MapComponent latitude={33.46156025} longitude={-112.32191100688232} displayName="Phoenix" ></MapComponent>

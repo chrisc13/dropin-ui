@@ -48,6 +48,7 @@
     padding: 4% 2%;
     overflow-x: auto;          /* allow horizontal scroll */
     scroll-snap-type: x mandatory; /* snap to each card */
+    margin-left: 2%;
 }
 
 .event-cards-wrapper > * {
@@ -65,12 +66,29 @@
         flex-wrap: wrap;
         justify-content: space-evenly;
         overflow-x: visible;
+        margin-left: 0px;
     }
 
     .event-cards-wrapper > * {
         flex: 0 0 auto; /* allow flexible sizing */
     }
 }
+
+@media (max-width: 721px) {
+    .create-event-button{
+        height: 50%;
+    }
+
+    .banner-text{
+        font-size: 20px;
+    }
+    .top-wrapper{
+        height: 500px;
+    }
+    .top-wrapper > h2 {
+        padding-top: 80px;
+    }
+  }
 
 /* Optional: hide scrollbar on mobile */
 .event-cards-wrapper::-webkit-scrollbar {
