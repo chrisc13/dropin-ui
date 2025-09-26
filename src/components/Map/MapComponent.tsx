@@ -112,14 +112,7 @@ export const MapComponent: React.FC<MapProps> = ({
     <div className="map-wrapper">
       {!isPreview && (
         <div className="map-search">
-          <input
-            type="text"
-            className="map-search-input"
-            placeholder="Type to search nearby"
-            value={searchText}
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
-            <select
+           <select
               className="map-radius-select"
               value={radius}
               onChange={(e) => setRadius(Number(e.target.value))}
@@ -130,6 +123,14 @@ export const MapComponent: React.FC<MapProps> = ({
                 </option>
               ))}
             </select>
+          <input
+            type="text"
+            className="map-search-input"
+            placeholder="Type to search nearby"
+            value={searchText}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+           
           <button className="map-search-button" onClick={handleSearchButton}>
             Search
           </button>

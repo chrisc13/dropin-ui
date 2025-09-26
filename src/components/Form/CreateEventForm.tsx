@@ -27,6 +27,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
       ? [initialValues.latitude, initialValues.longitude]
       : null
   );
+  const [isConfirmedLocation, setIsConfirmedLocation] = useState(false)
 
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
@@ -43,6 +44,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
 
   // Location typing + debounce
   const handleLocationChange = useCallback((value: string) => {
+    setIsConfirmedLocation(false)
     setTempAddress(value);
 
     // Undo previous confirmation if user starts typing again
@@ -78,6 +80,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
   const confirmLocation = () => {
     if (!tempLocation) return;
     setConfirmedLocation(tempLocation);
+    setIsConfirmedLocation(true)
     setFormValues((prev) => ({
       ...prev,
       location: tempDisplayName,
@@ -134,8 +137,9 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
         />
       </div>
 
-      {(mapLatitude && mapLongitude) && (
+      {(mapLatitude && mapLongitude) && !isConfirmedLocation && (
         <div className="map-preview">
+          <>{tempDisplayName}</>
           <MapComponent
             latitude={mapLatitude}
             longitude={mapLongitude}
@@ -144,7 +148,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
           />
           {!formValues.location && tempLocation && (
             <button type="button" className="btn confirm-btn" onClick={confirmLocation}>
-              Confirm Location
+              Confirm Area
             </button>
           )}
         </div>
@@ -164,7 +168,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
 
       </div>
 
-      <div className="form-group">
+      <div className="form-group" id="participant-count">
         <label>Max Participants</label>
         <input
           type="number"

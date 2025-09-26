@@ -114,7 +114,9 @@ body {
 .confirm-location-btn:hover {
   background-color: #2563eb; /* darker blue */
 }
-
+#participant-count{
+  width: 40%;
+}
 /* Optional: responsive */
 @media (max-width: 500px) {
   .generic-form {

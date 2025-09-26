@@ -2,7 +2,7 @@ import React from "react";
 import { DropEvent } from "../../model/DropEvent";
 import { Link } from "react-router-dom";
 import { shortenAddress } from "../Utils/Helpers";
-import { toLocalInputDate } from "../Utils/DateUtils";
+import { formatToLocalDate } from "../Utils/DateUtils";
 
 interface EventPopupBodyProps {
   dropEvent: DropEvent;
@@ -25,22 +25,16 @@ export const EventPopupBody: React.FC<EventPopupBodyProps> = ({ dropEvent }) => 
         <span className="label">Details:</span>
         <span className="value">{dropEvent.eventDetails}</span>
       </div>
-      <div className="form-group">
-        <label>Start Time</label>
-        <input
-          readOnly
-          type="datetime-local"
-          value={
-            dropEvent.start
-              ? toLocalInputDate(dropEvent.start)
-              : ""
-          }
-        />
+      <div className="field">
+        <span className="label">When:</span>
+        <span className="value">{ dropEvent.start
+              ? formatToLocalDate(dropEvent.start)
+              : ""}</span>
       </div>
       <div className="host-count-container" style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'space-between' }}>
         <div>
         <span className="label">Organizer:</span>
-            <Link className="attendeeItem" to={`/profile/${dropEvent.organizerName}`}>
+            <Link className="hostItem" to={`/profile/${dropEvent.organizerName}`}>
                       {dropEvent.organizerName}
                     </Link>
         </div>

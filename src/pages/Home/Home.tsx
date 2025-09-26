@@ -13,23 +13,26 @@ import { CreateEventForm } from "../../components/Form/CreateEventForm";
 
 export const Home = () =>{
     const [events, setEvents] = useState<DropEvent[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [showCreateEventPopup, setShowCreateEventPopup] = useState<boolean>(false);
     const { user, logout } = useAuth();
 
     useEffect(() => {
-        const fetchEvents = async () => {
-          try {
-            const data = await handleGetDropEvents();
-            console.log(data)
-            setEvents(data);
-          } catch (error) {
-            console.error("Error fetching drop events:", error);
-          }
-        };
+      const fetchEvents = async () => {
+        setIsLoading(true); // start loading before fetch
+        try {
+          const data = await handleGetDropEvents();
+          setEvents(data);
+        } catch (error) {
+          console.error("Error fetching drop events:", error);
+        } finally {
+          setIsLoading(false); // stop loading no matter what
+        }
+      };
     
-        fetchEvents();
-      }, []);
+      fetchEvents();
+    }, []);
+    
 
     const initialDropEvent: FormFields<DropEvent> = {
       sport: '',
