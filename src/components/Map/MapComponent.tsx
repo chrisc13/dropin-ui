@@ -44,6 +44,9 @@ export const MapComponent: React.FC<MapProps> = ({
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [radius, setRadius] = useState<number>(25); // default radius
+
+  const radiusOptions = [5, 10, 25, 50]; // miles
 
   // Initialize user location: props > geolocation > fallback default
   useEffect(() => {
@@ -75,7 +78,9 @@ export const MapComponent: React.FC<MapProps> = ({
       setUserLocation([searchLat, searchLng]);
 
       // Nearby events
-      const eventsRes = await fetch(`${API_BASE_URL}/Event/nearby?maxDistanceMiles=50&latitude=${searchLat}&longitude=${searchLng}`);
+      const eventsRes = await fetch(
+        `${API_BASE_URL}/Event/nearby?maxDistanceMiles=${radius}&latitude=${searchLat}&longitude=${searchLng}`
+      );
       const eventsData = await eventsRes.json();
       setSearchResults(eventsData);
     } catch (err) {
@@ -83,7 +88,7 @@ export const MapComponent: React.FC<MapProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [radius]);
 
   // Debounced input search
   const handleSearchChange = useCallback((value: string) => {
@@ -114,6 +119,17 @@ export const MapComponent: React.FC<MapProps> = ({
             value={searchText}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
+            <select
+              className="map-radius-select"
+              value={radius}
+              onChange={(e) => setRadius(Number(e.target.value))}
+            >
+              {radiusOptions.map((r) => (
+                <option key={r} value={r}>
+                  {r} mi
+                </option>
+              ))}
+            </select>
           <button className="map-search-button" onClick={handleSearchButton}>
             Search
           </button>
