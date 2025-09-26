@@ -28,6 +28,7 @@ export const EventPopupBody: React.FC<EventPopupBodyProps> = ({ dropEvent }) => 
       <div className="form-group">
         <label>Start Time</label>
         <input
+          readOnly
           type="datetime-local"
           value={
             dropEvent.start

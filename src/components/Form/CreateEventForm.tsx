@@ -19,7 +19,13 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
   const [formValues, setFormValues] = useState<FormFields<DropEvent>>(initialValues);
   const [tempAddress, setTempAddress] = useState<string>(initialValues.location || "");
   const [tempDisplayName, setTempDisplayName] = useState<string>("");
-  const [tempLocation, setTempLocation] = useState<[number, number]>([0, 0]);
+  const [tempLocation, setTempLocation] = useState<[number, number] | null>(null);
+  const [confirmedLocation, setConfirmedLocation] = useState<[number, number] | null>(
+    initialValues.latitude && initialValues.longitude
+      ? [initialValues.latitude, initialValues.longitude]
+      : null
+  );
+
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Generic input change
@@ -40,6 +46,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
     // Undo previous confirmation if user starts typing again
     if (formValues.location === tempDisplayName) {
       setFormValues((prev) => ({ ...prev, location: "" }));
+      setConfirmedLocation(null);
     }
 
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
@@ -57,7 +64,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
           const lat = parseFloat(data.lat);
           const lng = parseFloat(data.lng);
           setTempLocation([lat, lng]); // preview only
-          setTempDisplayName(data.displayName); // store normalized name
+          setTempDisplayName(data.displayName);
         }
       } catch (err) {
         console.error("Geocoding failed", err);
@@ -67,6 +74,8 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
 
   // Confirm location button
   const confirmLocation = () => {
+    if (!tempLocation) return;
+    setConfirmedLocation(tempLocation);
     setFormValues((prev) => ({
       ...prev,
       location: tempDisplayName,
@@ -76,16 +85,26 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
     setTempAddress(tempDisplayName);
   };
 
-  return (
-    <form id={formId} className="generic-form" onSubmit={handleSubmit} onKeyDown={(e) => {
-      // Prevent Enter from submitting in any input except the button
-      if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
-        e.preventDefault();
-      }}}>
+  // Decide which location to show on map: confirmed > temp > null
+  const mapLatitude = confirmedLocation ? confirmedLocation[0] : tempLocation?.[0];
+  const mapLongitude = confirmedLocation ? confirmedLocation[1] : tempLocation?.[1];
 
+  return (
+    <form
+      id={formId}
+      className="generic-form"
+      onSubmit={handleSubmit}
+      onKeyDown={(e) => {
+        // Prevent Enter from submitting in any input except the button
+        if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
+          e.preventDefault();
+        }
+      }}
+    >
       <div className="form-group">
         <label>Sport</label>
         <input
+          required
           type="text"
           value={formValues.sport || ""}
           onChange={(e) => handleChange("sport", e.target.value)}
@@ -105,6 +124,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
       <div className="form-group">
         <label>Location</label>
         <input
+          required
           type="text"
           value={tempAddress}
           onChange={(e) => handleLocationChange(e.target.value)}
@@ -112,20 +132,16 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
         />
       </div>
 
-      {tempLocation[0] !== 0 && tempLocation[1] !== 0 && (
+      {(mapLatitude && mapLongitude) && (
         <div className="map-preview">
           <MapComponent
-            latitude={tempLocation[0]}
-            longitude={tempLocation[1]}
+            latitude={mapLatitude}
+            longitude={mapLongitude}
             displayName={tempDisplayName}
             isPreview={true}
           />
-          {!formValues.location && (
-            <button
-              type="button"
-              className="btn confirm-btn"
-              onClick={confirmLocation}
-            >
+          {!formValues.location && tempLocation && (
+            <button type="button" className="btn confirm-btn" onClick={confirmLocation}>
               Confirm Location
             </button>
           )}
@@ -153,8 +169,6 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
           onChange={(e) => handleChange("maxPlayers", Number(e.target.value))}
         />
       </div>
-
-   
     </form>
   );
 };
