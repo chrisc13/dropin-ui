@@ -21,12 +21,14 @@
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 6px;
+    padding-bottom: 6px;
   }
 
   .nav-links {
     list-style: none;
     display: flex;
     gap: 16px;
+    z-index: 1000;
   }
   
   .nav-links li {

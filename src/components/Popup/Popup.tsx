@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
+import ReactDOM from "react-dom";
 import "./Popup.css"
 
 interface PopupProps {
@@ -11,29 +11,28 @@ interface PopupProps {
 }
 
 export const Popup: React.FC<PopupProps> = ({ title, isOpen, setClose, children, footer }) => {
-    const [isLoading, setIsLoading] = useState(false);
 
     if (!isOpen) return null;  
-
-    const handleSubmitButton = () =>{
-        setTimeout(() => {
-            setIsLoading(false)
-            setClose();
-        }, 2000);
-        setIsLoading(true)
-    }
-
-    return (
+    const popupContent = (
         <div className="overlay">
-        <div className="popup">
-            {isLoading && <LoadingSpinner></LoadingSpinner>}
+          <div className="popup" onClick={(e) => e.stopPropagation()}>
             <h2>{title}</h2>
             <div className="popup-body">{children}</div>
             <div className="popup-footer">
-                <button className="close-button" onClick={e => { e.stopPropagation(); setClose()}}>Close</button>
-                {footer && <>{footer}</>}
+              <button
+                className="close-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setClose();
+                }}
+              >
+                Close
+              </button>
+              {footer && <>{footer}</>}
             </div>
+          </div>
         </div>
-        </div>
-  );
+      );
+    
+      return ReactDOM.createPortal(popupContent, document.body);
 };
