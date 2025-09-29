@@ -3,7 +3,20 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const getDropEvents = async (): Promise<DropEvent[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/Event/GetTopThreePopularEvents`);
+      const response = await fetch(`${API_BASE_URL}/Event`);
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status}`);
+      }
+      const data = await response.json();
+      return data as DropEvent[];
+    } catch (error) {
+      console.error("Fetch error:", error);
+      throw error; // Re-throw the error after logging
+    }
+  };
+  const getThreeUpcomingDropEvents = async (): Promise<DropEvent[]> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/Event/GetTopThreeUpcomingEvents`);
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
       }
@@ -71,5 +84,8 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
 
   export const handleGetDropEvents = async (): Promise<DropEvent[]> => {
     return await getDropEvents();
+  };
+  export const handleGetThreeUpcomingDropEvents = async (): Promise<DropEvent[]> => {
+    return await getThreeUpcomingDropEvents();
   };
   

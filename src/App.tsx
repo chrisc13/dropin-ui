@@ -12,6 +12,7 @@ import { Profile } from "./model/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Navigate } from "react-router-dom";
 import {Helmet} from "react-helmet";
+import { EventsPage } from "./pages/Events/Events";
 
 function App() {
   return (
@@ -56,6 +57,12 @@ function AppContent() {
           path="/welcome"
           element={
               <Welcome />
+          }
+        />
+        <Route
+          path="/events"
+          element={
+              <EventsPage />
           }
         />
         {/* Protected routes */}

@@ -167,6 +167,7 @@ export const MapComponent: React.FC<MapProps> = ({
               <div className="map-pin-container">
                 <div><b>{event.sport}</b></div>
                 <div>{formatEventDate(event.start)}</div>
+                <div>{event.organizerName}</div>
                 <button className="popup-button" onClick={() => setSelectedEvent(event)}>
                   View Event
                 </button>

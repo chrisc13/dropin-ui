@@ -12,10 +12,9 @@
 
 
 .map-full {
-  height: 400px;
+  height: 600px;
   width: 100%;
   padding-top: 50px;
-
 }
 
 
@@ -85,12 +84,14 @@
 
 
 @media (max-width: 751px) {
-  
-  
     .map-search-input {
       width: 300px;
       padding: 8px;
     }
-  
 }
 
+@media (min-height: 1500px) {
+  .map-full {
+    height: 1000px;
+  }
+}
