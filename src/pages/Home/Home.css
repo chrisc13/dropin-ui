@@ -16,6 +16,18 @@
     text-align: center;
     height: 325px;
   }
+  .welcome-wrapper {
+    transition: 
+      opacity 0.5s ease,         /* fade */
+      transform 0.6s ease,       /* slide up */
+      max-height 0.7s ease;      /* smooth collapse */
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 300px;           /* adjust to your content height */
+    overflow: hidden;
+  }
+  
+ 
   
   .welcome-wrapper-text {
     color: #FFFFFF;
@@ -160,6 +172,21 @@
     max-height: 2000px; /* enough space to show events */
   }
   
+  .welcome-wrapper.hide {
+    max-height: 150px;                /* collapse */
+    padding: 0rem 2rem;
+    
+  }
+  .welcome-wrapper.hide .welcome-title{
+    font-size: 16px;
+  }
+  .welcome-wrapper.hide .welcome-subtitle{
+    font-size: 14px;
+    margin-bottom: 1rem;
+  }
+  .welcome-wrapper.hide .btn-secondary{
+    font-size: 10px;
+  }
   /* Optional: slightly delay event cards so they pop one-by-one */
   
   /* Pop-in animation for cards */
@@ -260,8 +287,12 @@
         margin-bottom: 5%;
     }
     .event-list-container.loggedin {
-        height: 425px;
+        height: 125px;
     }
+    .event-list-container.loggedin .event-cards-wrapper{
+        display: none;
+    }
+    
   }
 
 /* Optional: hide scrollbar on mobile */
