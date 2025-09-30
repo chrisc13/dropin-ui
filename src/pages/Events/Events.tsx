@@ -12,6 +12,7 @@ export const EventsPage: React.FC = () => {
   const [events, setEvents] = useState<DropEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
+  const [sortOption, setSortOption] = useState<string>("date"); // default sort
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +29,18 @@ export const EventsPage: React.FC = () => {
     };
     fetchEvents();
   }, []);
-
+  const sortedEvents = [...events].sort((a, b) => {
+    switch (sortOption) {
+      case "distance":
+        return a.distance - b.distance; // assuming each event has `distance` property
+      case "popularity":
+        return (b.attendees?.length || 0) - (a.attendees?.length || 0);
+      case "date":
+      default:
+        return new Date(a.start).getTime() - new Date(b.start).getTime();
+    }
+  });
+  
   const renderEvents = () => {
     if (isLoading) return <LoadingSpinner />;
     if (!events.length)
@@ -36,7 +48,7 @@ export const EventsPage: React.FC = () => {
 
     return (
       <div className="events-grid">
-        {events.map((e, idx) => {
+        {sortedEvents.map((e, idx) => {
           const isAttending =
             e.attendees?.some(
               (a) => a.username.toLowerCase() === user?.username?.toLowerCase()
@@ -58,9 +70,15 @@ export const EventsPage: React.FC = () => {
     <div className="events-page">
       <div className="events-header">
         <h1>All Events</h1>
-        <button className="btn-secondary" onClick={() => navigate("/")}>
-          Back to Home
-        </button>
+        <select
+        className="events-sort-select"
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+        >
+        <option value="date">Date (Soonest)</option>
+        <option value="distance">Distance</option>
+        <option value="popularity">Popularity</option>
+        </select>
       </div>
       {renderEvents()}
     </div>

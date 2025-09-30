@@ -9,6 +9,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { formatEventDate } from '../Utils/DateUtils';
 import { Popup as ModalPopup } from "../Popup/Popup";
 import { EventPopupBody } from '../Form/EventBodyPopup';
+import { DropEventCard } from '../DropEventCard/DropEventCard';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -24,6 +25,7 @@ interface MapProps {
   latitude?: number;
   displayName?: string;
   isPreview?: boolean;
+  onSearchFocus?: () => void; // 👈 callback with no arguments
 }
 
 const RecenterMap: React.FC<{ lat: number; lng: number }> = ({ lat, lng }) => {
@@ -37,6 +39,7 @@ export const MapComponent: React.FC<MapProps> = ({
   latitude,
   displayName,
   isPreview,
+  onSearchFocus
 }) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [searchText, setSearchText] = useState("");
@@ -112,22 +115,13 @@ export const MapComponent: React.FC<MapProps> = ({
     <div className="map-wrapper">
       {!isPreview && (
         <div className="map-search">
-           <select
-              className="map-radius-select"
-              value={radius}
-              onChange={(e) => setRadius(Number(e.target.value))}
-            >
-              {radiusOptions.map((r) => (
-                <option key={r} value={r}>
-                  {r} mi
-                </option>
-              ))}
-            </select>
+           
           <input
             type="text"
             className="map-search-input"
             placeholder="Type to search nearby"
             value={searchText}
+            onFocus={onSearchFocus}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
            
@@ -150,16 +144,22 @@ export const MapComponent: React.FC<MapProps> = ({
 
       <MapContainer
         center={userLocation}
-        zoom={11}
+        zoom={isPreview ? 14 : 11}
         className={isPreview ? "map-preview" : "map-full"}
-        scrollWheelZoom={!isPreview}
-        dragging={!isPreview}
-        zoomControl={window.innerWidth > 720}
+        dragging={!isPreview && window.innerWidth > 720}
+        scrollWheelZoom={false}
+        doubleClickZoom={false}
+        touchZoom={false}
+        zoomControl={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {isPreview && 
+          <Marker key={displayName} position={[userLocation[0], userLocation[1]]}>
+          </Marker>
+        }
 
         {searchResults.map((event) => (
           <Marker key={event.id} position={[event.latitude, event.longitude]}>
@@ -177,7 +177,24 @@ export const MapComponent: React.FC<MapProps> = ({
         ))}
 
         <RecenterMap lat={userLocation[0]} lng={userLocation[1]} />
+
+        <div className="map-cards-wrapper">
+        {searchResults.map((e, index) => {
+          return (
+            <div style={{ "--i": index } as React.CSSProperties} key={index}>
+            <DropEventCard
+              dropEvent={e}
+              key={index}
+              isLoggedIn={false}
+              isAttending={false}
+            />
+            </div>
+          );
+        })}
+      </div>
+
       </MapContainer>
+    
     </div>
   );
 };

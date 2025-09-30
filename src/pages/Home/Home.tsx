@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 export const Home = () => {
   const [events, setEvents] = useState<DropEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [showEvents, setShowEvents] = useState(false);
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const { user } = useAuth();
@@ -100,11 +101,15 @@ export const Home = () => {
     );
   };
 
+  const handleSearchFocus = () => {
+    setShowWelcome(false); // hide the welcome section
+  };
+
   return (
     <div className="home-layout">
       {/* WELCOME SECTION */}
       {!user && (
-        <div className="welcome-wrapper">
+        <div className={`welcome-wrapper ${showWelcome ? "show" : "hide"}`}>
           <div className="welcome-content">
             <h1 className="welcome-title">Welcome to Drop In!</h1>
             <p className="welcome-subtitle">
@@ -174,6 +179,7 @@ export const Home = () => {
           latitude={33.46156025}
           longitude={-112.32191100688232}
           displayName="Phoenix"
+          onSearchFocus={handleSearchFocus}
         />
       </div>
     </div>
