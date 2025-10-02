@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { Navigate } from "react-router-dom";
 import {Helmet} from "react-helmet";
 import { EventsPage } from "./pages/Events/Events";
+import { ThreadsPage } from "./pages/Threads/Threads";
 
 function App() {
   return (
@@ -63,6 +64,12 @@ function AppContent() {
           path="/events"
           element={
               <EventsPage />
+          }
+        />
+         <Route
+          path="/threads"
+          element={
+              <ThreadsPage />
           }
         />
         {/* Protected routes */}

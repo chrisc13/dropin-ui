@@ -1,0 +1,154 @@
+/* ThreadsPage.css */
+.threads-page {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .threads-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+
+  
+  
+  .threads-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .thread-card {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    background-color: #f5f5f5;
+  }
+  
+  .thread-card h3 {
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .thread-card .thread-date {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  .threads-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .thread-card {
+    background-color: #fff; /* card background */
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .thread-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  
+  .thread-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #222;
+  }
+  
+  .thread-card p {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+  }
+  
+  .thread-card small {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #888;
+  }
+  
+  .thread-card div {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: 500;
+  }
+  .create-thread-btn {
+    position: relative;
+    background-color: #11467e;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .create-thread-btn:hover {
+    background-color: #062545;
+  }
+  
+  /* Tooltip */
+  .create-thread-btn[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%; /* above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  
+  .create-thread-btn[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 115%; /* slightly below tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+    z-index: 10;
+  }
+  
+  
+  /* Optional: make it responsive for mobile */
+  @media (max-width: 720px) {
+    .threads-list {
+      padding: 0.5rem;
+      gap: 1rem;
+    }
+  
+    .thread-card {
+      padding: 1rem;
+    }
+  
+    .thread-card h3 {
+      font-size: 1.1rem;
+    }
+  
+    .thread-card p {
+      font-size: 0.95rem;
+    }
+  }
+  

@@ -3,6 +3,7 @@ import { DropEvent } from "../../model/DropEvent";
 import { Link } from "react-router-dom";
 import { shortenAddress } from "../Utils/Helpers";
 import { formatToLocalDate } from "../Utils/DateUtils";
+import { AvatarWithUsername } from "../Profile/AvatarWithUsername";
 
 interface EventPopupBodyProps {
   dropEvent: DropEvent;
