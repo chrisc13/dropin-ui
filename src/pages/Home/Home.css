@@ -26,8 +26,9 @@
     max-height: 300px;           /* adjust to your content height */
     overflow: hidden;
   }
-  
- 
+  .start-thread-btn{
+    margin-left: 5px
+  }
   
   .welcome-wrapper-text {
     color: #FFFFFF;
@@ -95,7 +96,7 @@
     font-size: 18px;
     color: black;
     font-weight: bold;
-    background-color: rgb(174, 174, 176);
+    background-color: #FFFFFF;
     border-radius: 10px;
     padding-left: 30px;
     padding-right: 30px;
@@ -263,6 +264,9 @@
 }
 
 @media (max-width: 721px) {
+    .welcome-wrapper{
+        padding: 1rem 2rem;
+    }
     .create-event-button{
         height: 50%;
     }
@@ -291,6 +295,9 @@
     }
     .event-list-container.loggedin .event-cards-wrapper{
         display: none;
+    }
+    .btn-secondary{
+        margin-bottom: 10px;
     }
     
   }

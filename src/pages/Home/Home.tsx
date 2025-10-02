@@ -119,11 +119,19 @@ export const Home = () => {
               className="btn-secondary"
               onClick={() => setShowEvents((prev) => !prev)}
             >
-              {showEvents ? "Hide Events" : "Browse Upcoming Events"}
+              {showEvents ? "Hide Events" : "Browse Events"}
             </button>
+             {/* New Start Thread button */}
+        <button
+          className="btn-primary start-thread-btn"
+          onClick={() => navigate("/threads")} // 👈 or open a modal later
+        >
+          💬 See What People Are Saying
+        </button>
           </div>
         </div>
       )}
+      {showEvents && isLoading && (<LoadingSpinner />)}
 
       {/* EVENTS SECTION — Appears when clicking “Browse Events” or if user is logged in */}
       {(showEvents || user) && (
@@ -135,7 +143,12 @@ export const Home = () => {
             >
               View All Events
             </button>
-
+            <button
+          className="btn-primary start-thread-btn"
+          onClick={() => navigate("/threads")} // 👈 or open a modal later
+        >
+          💬 See What People Are Saying
+        </button>
             {user && (
               <button
                 className="create-event-button"
