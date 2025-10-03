@@ -12,9 +12,6 @@
     margin-bottom: 2rem;
   }
   
-
-  
-  
   .threads-list {
     display: flex;
     flex-direction: column;
@@ -99,6 +96,9 @@
   .create-thread-btn:hover {
     background-color: #062545;
   }
+  .create-thread-btn:disabled{
+    background-color: #888;
+  }
   
   /* Tooltip */
   .create-thread-btn[data-tooltip]:hover::after {
@@ -130,7 +130,6 @@
     border-color: rgba(0,0,0,0.85) transparent transparent transparent;
     z-index: 10;
   }
-  
   
   /* Optional: make it responsive for mobile */
   @media (max-width: 720px) {

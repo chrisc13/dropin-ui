@@ -14,6 +14,7 @@ import { Navigate } from "react-router-dom";
 import {Helmet} from "react-helmet";
 import { EventsPage } from "./pages/Events/Events";
 import { ThreadsPage } from "./pages/Threads/Threads";
+import { ThreadDetails } from "./pages/Threads/ThreadDetails";
 
 function App() {
   return (
@@ -70,6 +71,12 @@ function AppContent() {
           path="/threads"
           element={
               <ThreadsPage />
+          }
+        />
+         <Route
+          path="/threads/:id"
+          element={
+              <ThreadDetails />
           }
         />
         {/* Protected routes */}

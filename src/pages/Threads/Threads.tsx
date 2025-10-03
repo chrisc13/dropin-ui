@@ -5,11 +5,14 @@ import { handleGetDropInThreads, handleCreateDropInThread } from "../../services
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
 import "./Threads.css";
+import { useNavigate } from "react-router-dom";
 
 export const ThreadsPage: React.FC = () => {
   const [threads, setThreads] = useState<DropInThread[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const { user } = useAuth(); // get user info for creator fields
+  var navigate = useNavigate();
 
   useEffect(() => {
     const fetchThreads = async () => {
@@ -39,6 +42,8 @@ export const ThreadsPage: React.FC = () => {
         createdAt: new Date().toISOString(),
         comments: [],
         likes: [],
+        commentCount: 0,
+        likeCount: 0,
         extraFields: {},
       };
 
@@ -55,9 +60,20 @@ export const ThreadsPage: React.FC = () => {
 
   return (
     <div className="threads-page">
-      <h1>Community Threads</h1>
+        <div className="threads-header">
+      <h1>Threads</h1>
+      <button
+      onClick={() => setShowCreateForm(true)}
+      disabled={!user}
+      className="create-thread-btn"
+      data-tooltip={user ? undefined : "Login to post"}
+        >
+      Start a Thread
+        </button>
 
-      {user ? <CreateThreadForm
+    
+    </div>
+    {showCreateForm && <CreateThreadForm
         formId="create-thread-form"
         initialValues={{
           title: "",
@@ -67,27 +83,27 @@ export const ThreadsPage: React.FC = () => {
           creatorImageUrl: "",
         }}
         onSubmit={handleCreateThread}
-      /> : <button
-      className="create-thread-btn"
-      data-tooltip={user ? "" : "Login to post"}
-    >
-      Start a Thread
-    </button>
+      />
     }
-
       {isLoading ? (
         <LoadingSpinner />
       ) : (
         <div className="threads-list">
           {threads.map((thread) => (
-            <div key={thread.id} className="thread-card">
+            <div key={thread.id} className="thread-card" onClick={() => {
+                if (thread.id) {
+                  navigate(`/threads/${thread.id}`);
+                } else {
+                  console.warn("Thread ID is missing, cannot navigate");
+                }
+              }}>
               <h3>{thread.title}</h3>
               <p>{thread.body}</p>
               <small>
                 By {thread.creatorName} on {new Date(thread.createdAt).toLocaleString()}
               </small>
               <div>
-                Likes: {thread.likes?.length || 0} | Comments: {thread.comments?.length || 0}
+                Likes: {thread.likeCount} | Comments: {thread.commentCount}
               </div>
             </div>
           ))}

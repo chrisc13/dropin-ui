@@ -1,0 +1,198 @@
+/* Overall wrapper */
+.thread-details-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  /* Main thread card */
+  .thread-details-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px 20px;
+    width: 60%;
+    margin-bottom: 20px;
+  }
+  
+  /* Layout that splits left (votes) and right (content) */
+  .thread-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  /* Left vertical vote bar */
+  .vote-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-top: 6px;
+    min-width: 40px;
+  }
+  
+  /* Vote buttons */
+  .vote-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    transition: transform 0.15s ease, opacity 0.2s;
+  }
+  
+  .vote-btn img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .vote-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  .vote-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Highlighted voted state */
+  .vote-btn.voted img {
+    filter: hue-rotate(25deg) brightness(1.4);
+  }
+  
+  /* Vote count number */
+  .vote-count {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+  }
+  
+  /* Main thread content on the right */
+  .thread-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .thread-main h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.4rem;
+    color: #222;
+  }
+  
+  .thread-main p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  
+  /* Metadata (author, date, etc.) */
+  .thread-main small {
+    margin-top: 10px;
+    color: #777;
+    font-size: 0.9rem;
+  }
+  
+  /* Comment / like meta info under post */
+  .thread-meta {
+    margin-top: 10px;
+    color: #555;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* Comment form (optional section) */
+  .add-comment-form {
+    width: 100%;
+    max-width: 650px;
+    margin-top: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Spinner alignment */
+  .loading-spinner {
+    margin: 40px auto;
+  }
+  /* Comments wrapper */
+.comments-wrapper {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 58%;
+  }
+  
+  /* Single comment card */
+  .comment-card {
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Comment header: avatar + username + timestamp */
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .comment-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Comment body */
+  .comment-body {
+    margin: 0;
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  
+  /* Fallback text if no comments */
+  .no-comments {
+    color: #777;
+    font-style: italic;
+    margin-top: 10px;
+  }
+  
+  /* Responsive layout tweaks */
+  @media (max-width: 720px) {
+    
+    .thread-details-card {
+      width: 100%;
+    }
+  
+    .thread-layout {
+      flex-direction: row;
+      gap: 10px;
+    }
+  
+    .vote-column {
+      min-width: 32px;
+    }
+  
+    .thread-main h3 {
+      font-size: 1.2rem;
+    }
+  
+    .thread-main p {
+      font-size: 0.95rem;
+    }
+    .comments-wrapper {
+        width: 95%;
+      }
+  }
+  
