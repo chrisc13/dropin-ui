@@ -111,7 +111,7 @@ const Welcome: React.FC = () =>{
     }
 
     return <div className="landing-page">
-      {error && <p style={{ color: "red" }}>{error}</p>} {/* ✅ error message */}
+      {error && <p style={{ color: "red" }}>{error}</p>} {}
               <section className="landing-top">
                 <h1>Drop In</h1>
                 <p>Find your next pick-up game or workout buddy with ease.</p>
