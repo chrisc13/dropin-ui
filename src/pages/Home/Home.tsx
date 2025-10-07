@@ -5,10 +5,8 @@ import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
 import MapComponent from "../../components/Map/MapComponent";
 import { handleCreateDropEvent, handleGetThreeUpcomingDropEvents } from "../../services/dropEventsService";
 import { FormFields } from "../../types/FormFields";
-import { Popup } from "../../components/Popup/Popup";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
-import { CreateEventForm } from "../../components/Form/CreateEventForm";
 import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
@@ -16,7 +14,6 @@ export const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
   const [showEvents, setShowEvents] = useState(false);
-  const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -36,44 +33,7 @@ export const Home = () => {
     fetchEvents();
   }, []);
 
-  const initialDropEvent: FormFields<DropEvent> = {
-    sport: "",
-    eventDetails: "",
-    location: "",
-    start: new Date(),
-    maxPlayers: 0,
-  };
 
-  const handleCreateEventSubmit = async (values: FormFields<DropEvent>) => {
-    const newEvent: DropEvent = {
-      eventName: values.eventName || "",
-      eventDetails: values.eventDetails || "",
-      sport: values.sport || "",
-      location: values.location || "",
-      locationDetails: values.locationDetails || "",
-      start: values.start || new Date(),
-      end: values.date || new Date(),
-      maxPlayers: values.maxPlayers || 0,
-      currentPlayers: values.currentPlayers || 1,
-      attendees: values.attendees || [],
-      organizerName: "",
-      organizerId: "",
-      latitude: values.latitude || 0,
-      longitude: values.longitude || 0,
-    };
-
-    try {
-      setIsLoading(true);
-      const data = await handleCreateDropEvent(newEvent);
-      console.log("Created event:", data);
-      setEvents((prev) => [...prev, newEvent]);
-    } catch (err) {
-      console.error("Error creating drop event:", err);
-    } finally {
-      setShowCreateEventPopup(false);
-      setIsLoading(false);
-    }
-  };
 
   const renderEventsList = () => {
     if (isLoading) return <LoadingSpinner />;
@@ -141,46 +101,24 @@ export const Home = () => {
               className="create-event-button"
               onClick={() => navigate("/events")}
             >
-              View All Events
+              Events
             </button>
             <button
-          className="btn-primary start-thread-btn"
+          className="create-event-button"
           onClick={() => navigate("/threads")} // 👈 or open a modal later
-        >
-          💬 See What People Are Saying
+        >Threads
         </button>
             {user && (
               <button
                 className="create-event-button"
-                onClick={() => setShowCreateEventPopup(true)}
+                onClick={() => navigate("/messages")}
               >
-                Create Event
+                Messages
               </button>
             )}
-          </div>
+      </div>
 
-          {showCreateEventPopup && (
-            <Popup
-              title="Create Event"
-              isOpen={showCreateEventPopup}
-              setClose={() => setShowCreateEventPopup(false)}
-              footer={
-                <button
-                  className="btn"
-                  type="submit"
-                  form="create-event-form"
-                >
-                  Post
-                </button>
-              }
-            >
-              <CreateEventForm
-                initialValues={initialDropEvent}
-                onSubmit={handleCreateEventSubmit}
-                formId="create-event-form"
-              />
-            </Popup>
-          )}
+          
 
           {renderEventsList()}
         </div>

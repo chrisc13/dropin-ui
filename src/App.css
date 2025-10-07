@@ -1,4 +1,12 @@
 .App{
   background-color: #ccd0d4;
-  height: 1920px;
+}
+body *:not(#map, #map *, .leaflet-container, .leaflet-container *) {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
 }

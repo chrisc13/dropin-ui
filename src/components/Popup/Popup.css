@@ -47,7 +47,9 @@
   .popup-footer button{
     background-color: #404967;
   }
-
+  .popup-footer .second{
+    background-color: #3b3b3e;
+  }
   .popup .close-button{
     background: #691a1a; /* blue-600 */
   }

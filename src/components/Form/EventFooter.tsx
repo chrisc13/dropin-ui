@@ -27,12 +27,21 @@ export const EventFooter: React.FC<EventFooterProps> = ({
       console.error("Error attending event", err);
     }
   };
+  const handleMessageClick = () => {
+    // Navigate to chat page with the organizer
+    navigate(`/chat/${dropEvent.organizerName}`);
+  };
+
 
   if (isLoggedIn) {
-    return (
+    return (<div className="message-attend-wrapper">
+    <button className="btn second" onClick={handleMessageClick}>
+        Message {dropEvent.organizerName}
+      </button>
       <button className="btn" onClick={handleAttendClick}>
         Going!
       </button>
+      </div>
     );
   } else {
     return (
