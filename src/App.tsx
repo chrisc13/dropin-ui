@@ -15,6 +15,8 @@ import {Helmet} from "react-helmet";
 import { EventsPage } from "./pages/Events/Events";
 import { ThreadsPage } from "./pages/Threads/Threads";
 import { ThreadDetails } from "./pages/Threads/ThreadDetails";
+import ChatWindow from "./components/Messaging/ChatWindow";
+import Messages from "./pages/Messages/Messages";
 
 function App() {
   return (
@@ -96,6 +98,20 @@ function AppContent() {
           path="/profile/:username"
           element={
               <ProfilePage />
+          }
+        />
+         <Route
+          path="/chat/:username"
+          element={
+              <ChatWindow />
+          }
+        />
+        <Route
+          path="/messages/"
+          element={
+            <ProtectedRoute>
+              <Messages />
+            </ProtectedRoute>
           }
         />
         <Route
