@@ -46,4 +46,10 @@
         height: 150px;
         width: 150px;
     }
+    .events-grid .card-wrapper img{
+        display: none;
+    }
+    .events-grid .card-wrapper .card-footer{
+        display: none;
+    }
   }
