@@ -5,6 +5,9 @@ body *:not(#map, #map *, .leaflet-container, .leaflet-container *) {
   max-width: 100%;
   box-sizing: border-box;
 }
+body, html, #root {
+  overflow-x: hidden; /* hide horizontal scroll globally if needed */
+}
 
 * {
   box-sizing: border-box;

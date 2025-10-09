@@ -72,7 +72,7 @@ export const Home = () => {
         <div className={`welcome-wrapper ${showWelcome ? "show" : "hide"}`}>
           <div className="welcome-content">
             <h1 className="welcome-title">Welcome to Drop In!</h1>
-            <p className="welcome-subtitle">
+            <p className={`welcome-subtitle ${showWelcome ? "show" : "hide"}`}>
               Find local pickup sports near you — play anytime, anywhere.
             </p>
             <button
@@ -125,7 +125,15 @@ export const Home = () => {
         </div>
       )}
 
-    
+    {/* MAP SECTION */}
+    <div className="body-wrapper">
+        <MapComponent
+          latitude={33.46156025}
+          longitude={-112.32191100688232}
+          displayName="Phoenix"
+          onSearchFocus={handleSearchFocus}
+        />
+      </div>
     </div>
   );
 };

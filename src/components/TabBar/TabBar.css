@@ -1,20 +1,24 @@
 .tab-bar {
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 50%;          /* start at center of screen */
+    transform: translateX(-50%); /* shift left by half its width to truly center */
     display: flex;
     justify-content: space-around;
+    align-items: center; /* vertical alignment */
     background: #202020;
     padding: 10px 0;
     z-index: 1000;
-  }
+    width: 50%;         /* or whatever width you want */
+    border-radius: 10px; /* optional, makes it look nicer */
+}
+
   .tab-bar button{
     background-color: transparent;
     border: none;
   }
   .tab-icon{
-    height: 25px;
+    height: 20px;
     filter: brightness(0) invert(1);
   }
   

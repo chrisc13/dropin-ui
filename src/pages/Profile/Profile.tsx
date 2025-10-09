@@ -49,7 +49,7 @@ export const ProfilePage: React.FC = () => {
 
     fetchProfile();
   }, [usernameParam, isOwnProfile]);
-
+ 
   if (loading) return <p className="loading">Loading profile...</p>;
   if (error) return <p className="error">{error}</p>;
   if (!profile) return null;
