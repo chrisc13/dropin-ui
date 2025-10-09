@@ -5,7 +5,11 @@
     padding: 12px 20px;
     background-color: #202020;
     color: white;
-    position: relative;
+    position: fixed;
+    height: 75px;
+    width: 100%;
+    z-index: 1100;
+    top: 0;
   }
   
   .nav-bar .logo {
@@ -13,6 +17,12 @@
     font-weight: bold;
     color: white;
     text-decoration: none;
+  }
+  .nav-bar-profile-icon{
+    border: 3px solid black;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
   }
   .logOutBtn, .logInBtn{
     background-color: rgb(70, 70, 114);

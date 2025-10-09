@@ -95,7 +95,7 @@
 .map-cards-wrapper{
   position: absolute;
   display: flex;
-  z-index: 1000;
+  z-index: 900;
   margin-top: 450px;
   left: 25%;
   overflow-x: auto;          /* allow horizontal scroll */

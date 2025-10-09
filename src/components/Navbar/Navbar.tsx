@@ -28,6 +28,14 @@ const Navbar = ({
 
   const isLoggedIn = !!user;
 
+  const SetNavBarIcon = () =>{
+    if (isLoggedIn){
+      return <img className="nav-bar-profile-icon" src={user.profileImageUrl} alt="☰"></img>
+    }
+
+    return <>☰</>
+  }
+
   return (
     <nav className="nav-bar">
       <Link to="/home" className="logo">
@@ -39,7 +47,7 @@ const Navbar = ({
         className="hamburger"
         onClick={() => setMenuOpen((prev) => !prev)}
       >
-        ☰
+        {SetNavBarIcon()}
       </button>
 
       <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
