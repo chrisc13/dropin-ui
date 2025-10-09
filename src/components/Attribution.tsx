@@ -14,6 +14,9 @@ export const Attribution = () => {
         , and{" "}
         <a href="https://www.flaticon.com/free-icons/reminder" title="reminder icons">Reminder icons created by Gajah Mada - Flaticon</a>
         . All used under free licenses.
+        <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Freepik - Flaticon</a>
+        <a href="https://www.flaticon.com/free-icons/home-button" title="home button icons">Home button icons created by Freepik - Flaticon</a>
+      <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by mattbadal - Flaticon</a>
       </p>
     </footer>
   );
