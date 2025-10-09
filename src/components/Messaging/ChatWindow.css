@@ -31,7 +31,7 @@
   
   .message-bubble.sent {
     align-self: flex-end;
-    background-color: #4a90e2;
+    background-color: gray;
     color: white;
     border-bottom-right-radius: 0;
   }
