@@ -3,6 +3,10 @@
     background-color: #202020;
 }
 
+.home-layout{
+    padding-top: 35px;
+}
+
 .top-wrapper > h1, h2{
     color: white;
     text-align: center;
@@ -270,7 +274,9 @@
     .create-event-button{
         height: 50%;
     }
-
+    #messages-button{
+        display: none;
+    }
     .banner-text{
         font-size: 20px;
     }
@@ -286,12 +292,11 @@
     }
     .event-actions{
         margin-top: 5%;
-        margin-left: 3%;
-        margin-right: 5%;
         margin-bottom: 5%;
     }
     .event-list-container.loggedin {
         height: 125px;
+        padding-top: 40px;
     }
     .event-list-container.loggedin .event-cards-wrapper{
         display: none;

@@ -110,6 +110,7 @@ export const Home = () => {
         </button>
             {user && (
               <button
+                id="messages-button"
                 className="create-event-button"
                 onClick={() => navigate("/messages")}
               >
@@ -124,15 +125,7 @@ export const Home = () => {
         </div>
       )}
 
-      {/* MAP SECTION */}
-      <div className="body-wrapper">
-        <MapComponent
-          latitude={33.46156025}
-          longitude={-112.32191100688232}
-          displayName="Phoenix"
-          onSearchFocus={handleSearchFocus}
-        />
-      </div>
+    
     </div>
   );
 };

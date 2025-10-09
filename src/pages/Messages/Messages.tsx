@@ -35,7 +35,7 @@ const Messages: React.FC = () => {
   if (!currentUser) return <div>Please log in to view messages</div>;
 
   return (
-    <div style={{ maxWidth: 600, margin: "20px auto" }}>
+    <div style={{ maxWidth: 600, margin: "20px auto", paddingTop: "75px" }}>
       <h2>Messages</h2>
       {conversations.length === 0 ? (
         <p>No conversations yet</p>

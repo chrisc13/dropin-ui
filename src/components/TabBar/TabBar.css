@@ -1,0 +1,31 @@
+.tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background: #202020;
+    padding: 10px 0;
+    z-index: 1000;
+  }
+  .tab-bar button{
+    background-color: transparent;
+    border: none;
+  }
+  .tab-icon{
+    height: 25px;
+    filter: brightness(0) invert(1);
+  }
+  
+  @media (min-width: 721px) {
+    .tab-bar {
+      display: none;
+    }
+  }
+  @media (max-width: 721px) {
+    main, body {
+      padding-bottom: 70px; /* same or slightly more than tab bar height */
+    }
+  }
+  

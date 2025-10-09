@@ -17,6 +17,7 @@ import { ThreadsPage } from "./pages/Threads/Threads";
 import { ThreadDetails } from "./pages/Threads/ThreadDetails";
 import ChatWindow from "./components/Messaging/ChatWindow";
 import Messages from "./pages/Messages/Messages";
+import { TabBar } from "./components/TabBar/TabBar";
 
 function App() {
   return (
@@ -123,6 +124,7 @@ function AppContent() {
           }
         />
       </Routes>
+      {!shouldHideNavbar  && <TabBar></TabBar>}
     </>
   );
 }

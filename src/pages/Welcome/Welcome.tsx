@@ -63,6 +63,7 @@ const Welcome: React.FC = () =>{
         const user: User = {
           id: "",
           username: registerRequest.username,
+          profileImageUrl: ""
         }
         login(user)
         setLoading(false);
