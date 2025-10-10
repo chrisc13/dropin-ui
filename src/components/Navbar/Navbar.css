@@ -18,12 +18,15 @@
     color: white;
     text-decoration: none;
   }
-  .nav-bar-profile-icon{
-    border: 1px solid black;
-    border-radius: 50%;
-    height: 60px;
-    width: 60px;
+  .nav-bar-profile-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;       /* makes it circular */
+    border: 2px solid #000;   /* adjust thickness/color */
+    object-fit: cover;        /* ensures image fills container without distortion */
+    display: block;           /* removes extra spacing under img */
   }
+  
   .logOutBtn, .logInBtn{
     background-color: rgb(70, 70, 114);
     border-radius: 25px;
@@ -42,6 +45,10 @@
   }
   
   .nav-links li {
+    cursor: pointer;
+  }
+  .logInBtn{
+    list-style: none;
     cursor: pointer;
   }
   

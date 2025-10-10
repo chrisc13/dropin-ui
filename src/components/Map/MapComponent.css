@@ -38,6 +38,7 @@
 
 .leaflet-top{
   z-index: 500;
+  margin-top: 50px;
 
 }
  .leaflet-bottom{
@@ -114,9 +115,7 @@
   height: 100px;
 }
 @media (max-width: 751px) {
-  .map-search{
-    left: 55%;
-  }
+
     .map-search-input {
       width: 300px;
       padding: 8px;

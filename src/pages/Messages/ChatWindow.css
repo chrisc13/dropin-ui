@@ -2,15 +2,19 @@
     width: 100%;
     max-width: 500px;
     margin: 20px auto;
-    border: 1px solid #ddd;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    height: 600px;
+    height: 700px;
     background-color: #fefefe;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-top: 85px;
   }
-  
+  .chat-page-avatar{
+    display: flex;
+    justify-content: center; /* horizontal center */
+    align-items: center;   
+  }
   .messages-container {
     flex: 1;
     padding: 10px;
@@ -86,8 +90,23 @@
     cursor: pointer;
     border-radius: 0 0 8px 0;
   }
-  
+  .message-preview-container{
+    display: flex;
+  }
   .chat-input button:hover {
     background-color: #357ABD;
   }
+  .message-profile-pic{
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    margin-right: 10px;
+  }
+  .message-data{
+    margin-top: 5px;
+    margin-left: 20px;
+  }
+
+  
+
   

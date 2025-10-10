@@ -54,23 +54,32 @@ const Welcome: React.FC = () =>{
     const handleRegister = async () => {
       const registerRequest: AuthRequest = {
         username: username.toLowerCase().trim(),
-        password: password.trim()
-      }
-
+        password: password.trim(),
+      };
+    
       try {
-        await handleRegisterRequest(registerRequest);
-        await handleLogin(); // auto-login after registration
-        const user: User = {
-          id: "",
-          username: registerRequest.username,
-          profileImageUrl: ""
+        setLoading(true);
+    
+        const user: User | null = await handleRegisterRequest(registerRequest);
+    
+        if (!user) {
+          throw new Error("Registration failed. Please try again.");
         }
-        login(user)
-        setLoading(false);
-      } catch (error) {
+    
+        // user is valid → update app state
+        login(user);
+        navigate("/home", { replace: true }); 
+    
+      } catch (error: any) {
         console.error("Error register:", error);
+        // display error to user
+        setError(error.message || "An unknown error occurred. ");
+      } finally {
+        setLoading(false);
       }
     };
+    
+    
 
 
     const handleSubmitLogin = () =>{
@@ -98,10 +107,6 @@ const Welcome: React.FC = () =>{
         return;
       }
       setLoading(true);
-
-      console.log("Username:", username);
-      console.log("Password:", password);
-
       handleRegister()
     };
     

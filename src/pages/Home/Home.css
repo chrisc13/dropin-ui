@@ -181,9 +181,13 @@
   .welcome-wrapper.hide {
     max-height: 150px;                /* collapse */
     padding: 0rem 2rem;
+    padding-top: 30px;
     
   }
   .welcome-subtitle.hide{
+    display: none;
+  }
+  .welcome-title.hide{
     display: none;
   }
   .welcome-wrapper.hide .welcome-title{

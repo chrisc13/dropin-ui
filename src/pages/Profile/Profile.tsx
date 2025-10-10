@@ -3,8 +3,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { Profile } from "../../model/Profile";
 import "./Profile.css";
+import { Avatar } from "../../components/Profile/Avatar";
 const API_BASE_URL = process.env.REACT_APP_API_URL;
-
 export const ProfilePage: React.FC = () => {
   const { user: authUser } = useAuth(); // logged-in user
   const { username: usernameParam } = useParams<{ username: string }>();
@@ -54,19 +54,13 @@ export const ProfilePage: React.FC = () => {
   if (error) return <p className="error">{error}</p>;
   if (!profile) return null;
 
-  const img = profile.profileImageUrl.includes("default") ? "https://randomuser.me/api/portraits/lego/5.jpg" : profile.profileImageUrl
-
   return (
     <div className="profile-page">
       <h1>{profile.username}'s Profile</h1>
 
-      {profile.profileImageUrl && (
-        <img
-          src={img}
-          alt={`${profile.username}'s avatar`}
-          className="profile-avatar"
-        />
-      )}
+      <div className="profile-page-avatar">
+      <Avatar username={profile.username} avatarUrl={profile.profileImageUrl} size={150} />
+      </div>
 
       <p>Name: {profile.firstName ?? ""} {profile.lastName ?? ""}</p>
       <p>Bio: {profile.bio ?? "No bio"}</p>

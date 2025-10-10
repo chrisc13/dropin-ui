@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ProfileBadge from "../Profile/ProfileBadge";
 import "./Navbar.css";
 import { useAuth } from "../../context/AuthContext";
-
+import { Avatar } from "../Profile/Avatar";
 interface NavbarProps {
   show?: boolean;
   profileIncomplete?: boolean;
@@ -30,10 +30,37 @@ const Navbar = ({
 
   const SetNavBarIcon = () =>{
     if (isLoggedIn){
-      return <img className="nav-bar-profile-icon" src={user.profileImageUrl} alt="☰"></img>
+      return <Avatar username={user.username} avatarUrl={user.profileImageUrl} size={60} />   // Large
     }
 
     return <>☰</>
+  }
+
+  const SetNavBar = () =>{
+    {/* Hamburger button for mobile */}
+    return (<><button
+    className="hamburger"
+    onClick={() => setMenuOpen((prev) => !prev)}
+  >
+    {SetNavBarIcon()}
+  </button>
+
+  <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+    {isLoggedIn ? (
+      <>
+        <li onClick={onProfileClick}>
+          <ProfileBadge incomplete={profileIncomplete} />
+        </li>
+        <li className="logOutBtn" onClick={handleLogout}>
+          Log Out
+        </li>
+      </>
+    ) : (
+      <li className="logInBtn" onClick={() => navigate("/welcome")}>
+        Log In
+      </li>
+    )}
+  </ul></>)
   }
 
   return (
@@ -42,30 +69,9 @@ const Navbar = ({
         Drop In
       </Link>
 
-      {/* Hamburger button for mobile */}
-      <button
-        className="hamburger"
-        onClick={() => setMenuOpen((prev) => !prev)}
-      >
-        {SetNavBarIcon()}
-      </button>
-
-      <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
-        {isLoggedIn ? (
-          <>
-            <li onClick={onProfileClick}>
-              <ProfileBadge incomplete={profileIncomplete} />
-            </li>
-            <li className="logOutBtn" onClick={handleLogout}>
-              Log Out
-            </li>
-          </>
-        ) : (
-          <li className="logInBtn" onClick={() => navigate("/welcome")}>
-            Log In
-          </li>
-        )}
-      </ul>
+      {!isLoggedIn ?  <li className="logInBtn" onClick={() => navigate("/welcome")}>Log In
+      </li> :SetNavBar()}
+      
     </nav>
   );
 };

@@ -15,7 +15,7 @@ import {Helmet} from "react-helmet";
 import { EventsPage } from "./pages/Events/Events";
 import { ThreadsPage } from "./pages/Threads/Threads";
 import { ThreadDetails } from "./pages/Threads/ThreadDetails";
-import ChatWindow from "./components/Messaging/ChatWindow";
+import ChatWindow from "./pages/Messages/ChatWindow";
 import Messages from "./pages/Messages/Messages";
 import { TabBar } from "./components/TabBar/TabBar";
 
