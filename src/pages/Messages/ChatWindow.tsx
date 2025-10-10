@@ -145,13 +145,23 @@ const ChatWindow: React.FC = () => {
 
       <div className="messages-container">
 
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`message-bubble ${
-              msg.sender === user1 ? "sent" : "received"
-            }`}
-          >
+      {messages.map((msg) => (
+        <div
+          className={`message-wrapper ${
+            msg.sender === user1 ? "sent-wrapper" : "received-wrapper"
+          }`}
+          key={msg.id}
+        >
+          {/* Avatar */}
+          {msg.sender !== user1 && (
+            <Avatar
+              username={msg.sender}
+              avatarUrl={profileImages[msg.sender]}
+              size={40}
+            />
+          )}
+
+          <div className={`message-bubble ${msg.sender === user1 ? "sent" : "received"}`}>
             <div className="message-text">{msg.message}</div>
             <div className="message-meta">
               <span className="sender-name">{msg.sender}</span>
@@ -163,7 +173,18 @@ const ChatWindow: React.FC = () => {
               </span>
             </div>
           </div>
-        ))}
+
+          {/* Show your avatar on the right */}
+          {msg.sender === user1 && (
+            <Avatar
+              username={msg.sender}
+              avatarUrl={profileImages[msg.sender]}
+              size={40}
+            />
+          )}
+        </div>
+      ))}
+
         <div ref={messagesEndRef} />
       </div>
 

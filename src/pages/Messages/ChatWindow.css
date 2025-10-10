@@ -24,28 +24,45 @@
     gap: 8px;
     padding-top: 75px;
   }
-  
-  .message-bubble {
-    max-width: 70%;
-    padding: 10px 14px;
-    border-radius: 18px;
-    position: relative;
-    display: inline-block;
+  .message-wrapper {
+    display: flex;
+    align-items: flex-end;
+    margin: 5px 0;
   }
   
-  .message-bubble.sent {
-    align-self: flex-end;
-    background-color: gray;
+  /* Left-side messages */
+  .received-wrapper {
+    justify-content: flex-start;
+  }
+  
+  .received-wrapper .message-bubble {
+    background-color: #f1f0f0;
+    margin-left: 5px;
+  }
+  
+  /* Right-side messages */
+  .sent-wrapper {
+    justify-content: flex-end;
+  }
+  
+  .sent-wrapper .message-bubble {
+    background-color: darkgray;
     color: white;
-    border-bottom-right-radius: 0;
+    margin-right: 5px;
   }
   
-  .message-bubble.received {
-    align-self: flex-start;
-    background-color: #eee;
-    color: #333;
-    border-bottom-left-radius: 0;
+  /* Bubble styling */
+  .message-bubble {
+    border-radius: 15px;
+    padding: 8px 12px;
+    max-width: 60%;
   }
+  
+  /* Avatar spacing */
+  .message-wrapper .avatar {
+    margin: 0 5px;
+  }
+  
   
   .message-text {
     word-wrap: break-word;
