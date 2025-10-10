@@ -29,6 +29,44 @@
     margin-right: 0.5rem;
     animation: pulse 1.5s infinite;
   }
+  .avatar-name-wrapper {
+    display: inline-flex; /* or flex if you want full-width alignment */
+    align-items: center;
+    gap: 10px; /* space between avatar and username */
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    background-color: #f5f5f5;
+  }
+  
+  .avatar-name-wrapper:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    transition: border-color 0.2s ease;
+  }
+  
+  .avatar-name-wrapper:hover .avatar {
+    border-color: #888;
+  }
+  
+  .username {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px; /* optional, prevents text from overflowing */
+  }
   
   /* simple pulsing animation for attention */
   @keyframes pulse {

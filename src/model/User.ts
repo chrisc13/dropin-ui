@@ -8,3 +8,8 @@ export interface AuthRequest {
     username: string;
     password: string;
   }
+
+export interface ProfileImage{
+    username: string,
+    profileImageUrl: string
+}

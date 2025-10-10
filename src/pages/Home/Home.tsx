@@ -66,12 +66,12 @@ export const Home = () => {
   };
 
   return (
-    <div className="home-layout">
+    <div className="home-layout">      
       {/* WELCOME SECTION */}
       {!user && (
         <div className={`welcome-wrapper ${showWelcome ? "show" : "hide"}`}>
           <div className="welcome-content">
-            <h1 className="welcome-title">Welcome to Drop In!</h1>
+            <h1 className={`welcome-title ${showWelcome ? "show" : "hide"}`}>Welcome to Drop In!</h1>
             <p className={`welcome-subtitle ${showWelcome ? "show" : "hide"}`}>
               Find local pickup sports near you — play anytime, anywhere.
             </p>

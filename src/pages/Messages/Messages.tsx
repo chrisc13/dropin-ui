@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Avatar } from "../../components/Profile/Avatar";
 import { useAuth } from "../../context/AuthContext";
 import { ConversationPreview } from "../../model/ChatMessage";
+import { ProfileImage } from "../../model/User";
+import { handleProfileImagesRequest } from "../../services/authService";
+import "./ChatWindow.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -9,7 +13,7 @@ const Messages: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState<ConversationPreview[]>([]);
-
+  const [profileImages, setProfileImages] = useState<Record<string, string>>({});
   const currentUser = user?.username;
 
   useEffect(() => {
@@ -27,6 +31,25 @@ const Messages: React.FC = () => {
 
     fetchConversations();
   }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const fetchProfileImages = async (usernames: string[]) => {
+      //setIsLoading(true);
+      try {
+        const data = await handleProfileImagesRequest(usernames);
+        setProfileImages(data);
+      } catch (error) {
+        console.error("Error fetching profile images:", error);
+      } finally {
+        //setIsLoading(false);
+      }
+    };
+
+      fetchProfileImages(conversations.map(convo => convo.otherUser));
+  }, [conversations]);
+
 
   const handleOpenChat = (otherUser: string) => {
     navigate(`/chat/${otherUser}`);
@@ -53,11 +76,16 @@ const Messages: React.FC = () => {
                 borderRadius: 5,
               }}
             >
-              <b>{conv.otherUser}</b>
-              <div style={{ fontSize: 14, color: "#555" }}>
-                {conv.lastMessage.message}
+              <div className="message-preview-container">
+                <Avatar username={conv.otherUser} avatarUrl={profileImages[conv.otherUser]} size={65} />
+                <div className="message-data">
+                  <b>{conv.otherUser}</b>
+                  <div style={{ fontSize: 14, color: "#555" }}>
+                  {conv.lastMessage.message}
+                  </div>
+                  <div style={{ fontSize: 10, color: "#888" }}>{conv.lastMessage.timestamp}</div>
+                </div>
               </div>
-              <div style={{ fontSize: 10, color: "#888" }}>{conv.lastMessage.timestamp}</div>
             </li>
           ))}
         </ul>

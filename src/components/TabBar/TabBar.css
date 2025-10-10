@@ -10,7 +10,9 @@
     padding: 10px 0;
     z-index: 1000;
     width: 50%;         /* or whatever width you want */
-    border-radius: 10px; /* optional, makes it look nicer */
+    border-radius: 20px ; /* optional, makes it look nicer */
+    opacity: 70%;
+    margin-bottom: 5px;
 }
 
   .tab-bar button{

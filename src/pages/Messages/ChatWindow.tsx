@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, FormEvent } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Avatar } from "../../components/Profile/Avatar";
 import { useAuth } from "../../context/AuthContext";
+import { handleProfileImagesRequest } from "../../services/authService";
 import "./ChatWindow.css";
 
 interface ChatMessage {
@@ -13,9 +15,10 @@ interface ChatMessage {
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const ChatWindow: React.FC = () => {
+  const navigate = useNavigate();
   const { username } = useParams<{ username: string }>();
   const { user } = useAuth();
-
+  const [profileImages, setProfileImages] = useState<Record<string, string>>({});
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -70,7 +73,7 @@ const ChatWindow: React.FC = () => {
     };
 
     fetchMessages();
-    const interval = setInterval(fetchMessages, 5000);
+    const interval = setInterval(fetchMessages, 16000);
 
     return () => {
       isMounted = false;
@@ -82,6 +85,23 @@ const ChatWindow: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+
+  useEffect(() => {
+    const fetchProfileImages = async (usernames: string[]) => {
+      try {
+        const data = await handleProfileImagesRequest(usernames);
+        setProfileImages(data);
+      } catch (error) {
+        console.error("Error fetching profile images:", error);
+      } finally {
+      }
+    };
+
+      fetchProfileImages([user1, user2]);
+  }, [user1, user2]);
+
+
 
   const handleSend = async (e: FormEvent) => {
     e.preventDefault();
@@ -119,7 +139,12 @@ const ChatWindow: React.FC = () => {
 
   return (
     <div className="chat-window">
+    <div className="chat-page-avatar" onClick={() => navigate(`/profile/${username}`)}>
+        <Avatar username={user2} avatarUrl={profileImages[user2]} size={80}></Avatar>
+      </div>
+
       <div className="messages-container">
+
         {messages.map((msg) => (
           <div
             key={msg.id}
