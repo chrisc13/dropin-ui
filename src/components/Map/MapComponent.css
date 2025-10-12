@@ -102,6 +102,7 @@
   overflow-x: auto;          /* allow horizontal scroll */
   scroll-snap-type: x mandatory; 
   width: 50%;
+  height: 200px;
 }
 .map-cards-wrapper > * {
   flex: 0 0 auto; /* allow flexible sizing */
@@ -114,6 +115,7 @@
 .map-cards-wrapper img{
   height: 100px;
 }
+
 @media (max-width: 751px) {
 
     .map-search-input {
@@ -121,7 +123,7 @@
       padding: 8px;
     }
   .map-cards-wrapper{
-    margin-top: 450px;
+    margin-top: 500px;
     width: 100%;
     left: 0%;
 

@@ -64,7 +64,7 @@
     display: block;
     margin: 1rem auto 0;
     padding: 0.6rem 1.2rem;
-    background-color: #3b82f6; /* blue */
+    background-color: #11467e; /* blue */
     color: #fff;
     font-weight: 600;
     border: none;
@@ -75,7 +75,7 @@
   }
   
   .profile-page button:hover {
-    background-color: #2563eb; /* darker blue */
+    background-color: #11467e; /* darker blue */
   }
   
   /* Loading / error text */
@@ -94,6 +94,7 @@
     .profile-page {
       margin: 1rem;
       padding: 0.75rem;
+      padding-top: 60px;
     }
   
     .profile-page h1 {
