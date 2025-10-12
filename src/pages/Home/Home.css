@@ -105,6 +105,7 @@
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 6px;
+    min-height: 40px;
 }
 .create-event-button:hover{
     cursor: pointer;

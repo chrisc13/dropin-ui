@@ -1,4 +1,3 @@
-// src/pages/EventsPage.tsx
 import React, { useEffect, useState } from "react";
 import { DropEvent } from "../../model/DropEvent";
 import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
@@ -9,23 +8,56 @@ import { useNavigate } from "react-router-dom";
 import "./Events.css";
 import { CreateEventForm } from "../../components/Form/CreateEventForm";
 import { Popup } from "../../components/Popup/Popup";
-import { handleCreateDropEvent, handleGetThreeUpcomingDropEvents } from "../../services/dropEventsService";
+import { handleCreateDropEvent } from "../../services/dropEventsService";
 import { FormFields } from "../../types/FormFields";
+
+// Haversine formula to calculate distance in miles
+const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const toRad = (x: number) => (x * Math.PI) / 180;
+  const R = 3958.8; // Radius of Earth in miles
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
 
 export const EventsPage: React.FC = () => {
   const [events, setEvents] = useState<DropEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const [sortOption, setSortOption] = useState<string>("date"); // default sort
+  const [sortOption, setSortOption] = useState<string>("date");
   const navigate = useNavigate();
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
+  // Get user location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => setUserLocation({ lat: 33.46, lng: -112.32 }) // fallback
+      );
+    } else {
+      setUserLocation({ lat: 33.46, lng: -112.32 });
+    }
+  }, []);
 
   useEffect(() => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
         const data = await handleGetDropEvents();
+
+        // Compute distance if we have user location
+        if (userLocation) {
+          data.forEach((e) => {
+            e.distance = getDistance(userLocation.lat, userLocation.lng, e.latitude, e.longitude);
+          });
+        }
+
         setEvents(data);
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -34,11 +66,12 @@ export const EventsPage: React.FC = () => {
       }
     };
     fetchEvents();
-  }, []);
+  }, [userLocation]);
+
   const sortedEvents = [...events].sort((a, b) => {
     switch (sortOption) {
       case "distance":
-        return a.distance - b.distance; // assuming each event has `distance` property
+        return (a.distance || 0) - (b.distance || 0);
       case "popularity":
         return (b.attendees?.length || 0) - (a.attendees?.length || 0);
       case "date":
@@ -67,8 +100,7 @@ export const EventsPage: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const data = await handleCreateDropEvent(newEvent);
-      console.log("Created event:", data);
+      await handleCreateDropEvent(newEvent);
       setEvents((prev) => [...prev, newEvent]);
     } catch (err) {
       console.error("Error creating drop event:", err);
@@ -77,19 +109,20 @@ export const EventsPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  const start = new Date();
+  const newTime = new Date(start.getTime() + 30 * 60 * 1000);
   const initialDropEvent: FormFields<DropEvent> = {
     sport: "",
     eventDetails: "",
     location: "",
-    start: new Date(),
+    start: newTime,
     maxPlayers: 0,
   };
 
-  
   const renderEvents = () => {
     if (isLoading) return <LoadingSpinner />;
-    if (!events.length)
-      return <p style={{ textAlign: "center" }}>No events available.</p>;
+    if (!events.length) return <p style={{ textAlign: "center" }}>No events available.</p>;
 
     return (
       <div className="events-grid">
@@ -113,48 +146,52 @@ export const EventsPage: React.FC = () => {
 
   return (
     <div className="events-page">
-      <div className="events-header">
         <h1>Events</h1>
-        {user && (
-              <button
-                className="create-event-button"
-                onClick={() => setShowCreateEventPopup(true)}
-              >
-                Create Event
-              </button>
-            )}
+      {/*user && (
+      <div className="user-events-actions">
+          <button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
+            Organizing
+          </button>
+          <button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
+            Attending
+          </button>
+          
+          </div>
+      )*/}
+      <div className="events-header">
+        {user && (<button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
+            Create Event
+          </button>)}
         <select
-        className="events-sort-select"
-        value={sortOption}
-        onChange={(e) => setSortOption(e.target.value)}
+          className="events-sort-select"
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
         >
-        <option value="date">Date (Soonest)</option>
-        <option value="distance">Distance</option>
-        <option value="popularity">Popularity</option>
+          <option value="date">Date (Soonest)</option>
+          <option value="distance">Distance</option>
+          <option value="popularity">Popularity</option>
         </select>
       </div>
+
       {showCreateEventPopup && (
-            <Popup
-              title="Create Event"
-              isOpen={showCreateEventPopup}
-              setClose={() => setShowCreateEventPopup(false)}
-              footer={
-                <button
-                  className="btn"
-                  type="submit"
-                  form="create-event-form"
-                >
-                  Post
-                </button>
-              }
-            >
-              <CreateEventForm
-                initialValues={initialDropEvent}
-                onSubmit={handleCreateEventSubmit}
-                formId="create-event-form"
-              />
-            </Popup>
-          )}
+        <Popup
+          title="Create Event"
+          isOpen={showCreateEventPopup}
+          setClose={() => setShowCreateEventPopup(false)}
+          footer={
+            <button className="btn" type="submit" form="create-event-form">
+              Post
+            </button>
+          }
+        >
+          <CreateEventForm
+            initialValues={initialDropEvent}
+            onSubmit={handleCreateEventSubmit}
+            formId="create-event-form"
+          />
+        </Popup>
+      )}
+
       {renderEvents()}
     </div>
   );

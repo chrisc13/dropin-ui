@@ -1,5 +1,5 @@
 // MapComponent.tsx
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -7,9 +7,8 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import "./MapComponent.css";
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { formatEventDate } from '../Utils/DateUtils';
-import { Popup as ModalPopup } from "../Popup/Popup";
-import { EventPopupBody } from '../Form/EventBodyPopup';
 import { DropEventCard } from '../DropEventCard/DropEventCard';
+import { useAuth } from "../../context/AuthContext";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -20,19 +19,33 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+// Default marker icon
+const defaultIcon = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// Recenter map component
+const RecenterMap: React.FC<{ lat: number; lng: number }> = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([lat, lng], map.getZoom());
+  }, [lat, lng, map]);
+  return null;
+};
+
 interface MapProps {
   longitude?: number;
   latitude?: number;
   displayName?: string;
   isPreview?: boolean;
-  onSearchFocus?: () => void; // 👈 callback with no arguments
+  onSearchFocus?: () => void;
 }
-
-const RecenterMap: React.FC<{ lat: number; lng: number }> = ({ lat, lng }) => {
-  const map = useMap();
-  map.setView([lat, lng], map.getZoom());
-  return null;
-};
 
 export const MapComponent: React.FC<MapProps> = ({
   longitude,
@@ -47,22 +60,26 @@ export const MapComponent: React.FC<MapProps> = ({
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const [radius, setRadius] = useState<number>(25); // default radius
+  const [radius, setRadius] = useState<number>(25);
+  const { user } = useAuth();
 
-  const radiusOptions = [5, 10, 25, 50]; // miles
-
-  // Initialize user location: props > geolocation > fallback default
-  useEffect(() => {
+  // Initialize user location
+   // ✅ Ask user for location explicitly
+   useEffect(() => {
     if (latitude && longitude) {
       setUserLocation([latitude, longitude]);
     } else if (navigator.geolocation) {
+      // This triggers browser permission prompt
       navigator.geolocation.getCurrentPosition(
         (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
-        () => setUserLocation([33.46, -112.32]), // fallback default
-        { enableHighAccuracy: true }
+        (err) => {
+          console.warn("Geolocation denied:", err.message);
+          setUserLocation([33.46, -112.32]); // fallback (Phoenix)
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
       );
     } else {
-      setUserLocation([33.46, -112.32]); // fallback if geolocation not available
+      setUserLocation([33.46, -112.32]);
     }
   }, [latitude, longitude]);
 
@@ -71,7 +88,6 @@ export const MapComponent: React.FC<MapProps> = ({
     if (query.length < 2) return;
     setIsLoading(true);
     try {
-      // Geocode
       const geoRes = await fetch(`${API_BASE_URL}/api/Location/geocode?address=${encodeURIComponent(query)}`);
       const geoData = await geoRes.json();
       if (!geoData.lat || !geoData.lng) return;
@@ -80,7 +96,6 @@ export const MapComponent: React.FC<MapProps> = ({
       const searchLng = parseFloat(geoData.lng);
       setUserLocation([searchLat, searchLng]);
 
-      // Nearby events
       const eventsRes = await fetch(
         `${API_BASE_URL}/Event/nearby?maxDistanceMiles=${radius}&latitude=${searchLat}&longitude=${searchLng}`
       );
@@ -93,29 +108,31 @@ export const MapComponent: React.FC<MapProps> = ({
     }
   }, [radius]);
 
-  // Debounced input search
+  // Debounced search input
   const handleSearchChange = useCallback((value: string) => {
     setSearchText(value);
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    debounceTimeout.current = setTimeout(() => {
-      performSearch(value);
-    }, 2500);
+    debounceTimeout.current = setTimeout(() => performSearch(value), 2500);
   }, [performSearch]);
 
-  // Search button click
   const handleSearchButton = () => {
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     performSearch(searchText);
   };
 
-  // Wait for userLocation before rendering map
+  // Scroll selected card into view
+  useEffect(() => {
+    if (!selectedEvent) return;
+    const card = document.getElementById(`event-card-${selectedEvent.id}`);
+    card?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  }, [selectedEvent]);
+
   if (!userLocation) return <div>Loading map…</div>;
 
   return (
     <div className="map-wrapper">
       {!isPreview && (
         <div className="map-search">
-           
           <input
             type="text"
             className="map-search-input"
@@ -124,22 +141,11 @@ export const MapComponent: React.FC<MapProps> = ({
             onFocus={onSearchFocus}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
-           
           <button className="map-search-button" onClick={handleSearchButton}>
             Search
           </button>
           {isLoading && <span className="spinner" />}
         </div>
-      )}
-
-      {selectedEvent && (
-        <ModalPopup
-          title={selectedEvent.eventName}
-          isOpen={!!selectedEvent}
-          setClose={() => setSelectedEvent(null)}
-        >
-          <EventPopupBody dropEvent={selectedEvent} />
-        </ModalPopup>
       )}
 
       <MapContainer
@@ -156,47 +162,43 @@ export const MapComponent: React.FC<MapProps> = ({
           attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {isPreview && 
-          <Marker key={displayName} position={[userLocation[0], userLocation[1]]}>
-          </Marker>
+
+        {isPreview &&
+          <Marker key={displayName} position={[userLocation[0], userLocation[1]]} />
         }
 
         {searchResults.map((event) => (
-          <Marker key={event.id} position={[event.latitude, event.longitude]}>
-            <Popup className="custom-popup">
-              <div className="map-pin-container">
-                <div><b>{event.sport}</b></div>
-                <div>{formatEventDate(event.start)}</div>
-                <div>{event.organizerName}</div>
-                <button className="popup-button" onClick={() => setSelectedEvent(event)}>
-                  View Event
-                </button>
-              </div>
-            </Popup>
-          </Marker>
+          <Marker
+            key={event.id}
+            position={[event.latitude, event.longitude]}
+            eventHandlers={{ click: () => setSelectedEvent(event) }}
+            icon={defaultIcon}
+          />
         ))}
+          <RecenterMap lat={userLocation[0]} lng={userLocation[1]} />
 
-        <RecenterMap lat={userLocation[0]} lng={userLocation[1]} />
+        {selectedEvent && <RecenterMap lat={selectedEvent.latitude} lng={selectedEvent.longitude} />}
 
         <div className="map-cards-wrapper">
-        {searchResults.map((e, index) => {
-          return (
-            <div style={{ "--i": index } as React.CSSProperties} key={index}>
-            <DropEventCard
-              dropEvent={e}
-              key={index}
-              isLoggedIn={false}
-              isAttending={false}
-            />
+          {searchResults.map((e, index) => (
+            <div
+              id={`event-card-${e.id}`}
+              key={e.id}
+              style={{ "--i": index } as React.CSSProperties}
+            >
+                <DropEventCard
+                dropEvent={e}
+                isLoggedIn={!!user}
+                isAttending={false}
+                selected={selectedEvent?.id === e.id}
+              />
             </div>
-          );
-        })}
-      </div>
-
+          ))}
+        </div>
       </MapContainer>
-    
     </div>
   );
 };
 
 export default MapComponent;
+

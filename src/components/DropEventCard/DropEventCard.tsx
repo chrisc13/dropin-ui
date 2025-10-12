@@ -13,10 +13,11 @@ import { formatToLocalDate } from "../Utils/DateUtils";
 export interface DropEventCardProps{
     dropEvent:  DropEvent,
     isLoggedIn: boolean, 
-    isAttending: boolean
+    isAttending: boolean,
+    selected?: boolean
 }
 
-export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLoggedIn, isAttending}) => {
+export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLoggedIn, isAttending,   selected = false,}) => {
     const [showPopup, setShowPopup] = useState(false);
 
     const randomSampleImage = () =>{
@@ -31,7 +32,7 @@ export const DropEventCard: React.FC<DropEventCardProps> = ({dropEvent, isLogged
 
 
     const image = randomSampleImage();
-    return <div className={isAttending ? "card-wrapper attending" : "card-wrapper"} onClick={e => handleShowPopup()} >
+    return <div className={`card-wrapper ${isAttending ? "attending" : ""} ${selected ? "highlight" : ""}`}onClick={e => handleShowPopup()} >
         <Popup title={dropEvent.eventName} isOpen={showPopup} setClose={handleClosePopup} children={<EventPopupBody dropEvent={dropEvent} />} 
            footer={
             <EventFooter

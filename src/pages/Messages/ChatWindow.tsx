@@ -26,6 +26,8 @@ const ChatWindow: React.FC = () => {
 
   const user1 = user?.username ?? "";
   const user2 = username ?? "";
+  const sendTimeout = useRef<NodeJS.Timeout | null>(null);
+
 
   // Poll messages every 5s
   useEffect(() => {
@@ -101,40 +103,43 @@ const ChatWindow: React.FC = () => {
       fetchProfileImages([user1, user2]);
   }, [user1, user2]);
 
-
-
   const handleSend = async (e: FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
-
-    // Add optimistic message immediately
-    const tempId = `temp-${Date.now()}`;
-    const optimisticMsg: ChatMessage = {
-      id: tempId,
-      sender: user1,
-      message: newMessage,
-      timestamp: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, optimisticMsg]);
-
-    try {
-      await fetch(`${API_BASE_URL}/api/Messaging/send`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user1,
-          user2,
-          sender: user1,
-          message: newMessage,
-        }),
-      });
-    } catch (err) {
-      console.error("Failed to send message", err);
-    }
-
-    setNewMessage("");
+  
+    // 🕒 Clear previous debounce if user types/sends again quickly
+    if (sendTimeout.current) clearTimeout(sendTimeout.current);
+  
+    // 🧠 Debounce: wait 800ms (adjust as needed)
+    sendTimeout.current = setTimeout(async () => {
+      const tempId = `temp-${Date.now()}`;
+      const optimisticMsg: ChatMessage = {
+        id: tempId,
+        sender: user1,
+        message: newMessage,
+        timestamp: new Date().toISOString(),
+      };
+  
+      // Add message immediately to UI
+      setMessages((prev) => [...prev, optimisticMsg]);
+      setNewMessage("");
+  
+      try {
+        await fetch(`${API_BASE_URL}/api/Messaging/send`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user1,
+            user2,
+            sender: user1,
+            message: newMessage,
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to send message", err);
+      }
+    }, 1000);
   };
-
   if (!user1 || !user2) return <div>Please log in to chat</div>;
 
   return (
