@@ -19,7 +19,9 @@
     max-width: 1200px; /* optional: constrain width */
     margin-bottom: 2rem;
   }
-  
+  .event-filter-toggle{
+    color: white
+  }
   .events-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -35,6 +37,10 @@
     color: #FFFFFF;
     padding: 0.75rem 1.5rem;
     border-radius: 1rem;
+  }
+  .btn.active {
+    background-color: #11467e;
+    color: white;
   }
 
   @media (max-width: 721px) {

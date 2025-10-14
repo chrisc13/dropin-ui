@@ -152,7 +152,7 @@
 
 .card-wrapper.highlight {
   transform: scale(1.10);  /* slightly bigger */
-  border: 8px solid rgb(225, 223, 112);
+  border: 1px solid rgb(225, 223, 112);
   z-index: 2;             /* bring forward */
 }
 .card-wrapper.highlight img{

@@ -78,9 +78,6 @@ const Welcome: React.FC = () =>{
         setLoading(false);
       }
     };
-    
-    
-
 
     const handleSubmitLogin = () =>{
       setLoading(true);

@@ -58,7 +58,9 @@
     padding: 0.25rem 0;
     border-bottom: 1px solid #e5e7eb; /* light border */
   }
-  
+  .profile-user-actions-wrapper{
+    display: flex;
+  }
   /* Edit profile button */
   .profile-page button {
     display: block;

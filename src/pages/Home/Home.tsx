@@ -1,59 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Home.css";
-import { DropEvent } from "../../model/DropEvent";
 import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
 import MapComponent from "../../components/Map/MapComponent";
-import { handleCreateDropEvent, handleGetThreeUpcomingDropEvents } from "../../services/dropEventsService";
-import { FormFields } from "../../types/FormFields";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useDropEvents } from "../../context/DropEventContext";
 
 export const Home = () => {
-  const [events, setEvents] = useState<DropEvent[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
   const [showEvents, setShowEvents] = useState(false);
+
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      try {
-        const data = await handleGetThreeUpcomingDropEvents();
-        setEvents(data);
-      } catch (error) {
-        console.error("Error fetching drop events:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // 👇 use context data instead of fetching manually
+  const { topThreeEvents: events, refreshTopThree } = useDropEvents();
 
-    fetchEvents();
-  }, []);
-
-
+  // optional: if you want loading feedback based on null state
+  const isLoading = !events;
 
   const renderEventsList = () => {
     if (isLoading) return <LoadingSpinner />;
 
     return (
       <div className="event-cards-wrapper">
-        {events.map((e, index) => {
+        {events?.map((e, index) => {
           const isAttending =
             e.attendees?.some(
               (a) =>
                 a.username.toLowerCase() === user?.username?.toLowerCase()
             ) ?? false;
           return (
-            <div style={{ "--i": index } as React.CSSProperties} key={index}>
-            <DropEventCard
-              dropEvent={e}
-              key={index}
-              isLoggedIn={!!user}
-              isAttending={isAttending}
-            />
+            <div style={{ "--i": index } as React.CSSProperties} key={e.id ?? index}>
+              <DropEventCard
+                dropEvent={e}
+                isLoggedIn={!!user}
+                isAttending={isAttending}
+              />
             </div>
           );
         })}
@@ -62,16 +46,18 @@ export const Home = () => {
   };
 
   const handleSearchFocus = () => {
-    setShowWelcome(false); // hide the welcome section
+    setShowWelcome(false);
   };
 
   return (
-    <div className="home-layout">      
+    <div className="home-layout">
       {/* WELCOME SECTION */}
       {!user && (
         <div className={`welcome-wrapper ${showWelcome ? "show" : "hide"}`}>
           <div className="welcome-content">
-            <h1 className={`welcome-title ${showWelcome ? "show" : "hide"}`}>Welcome to Drop In!</h1>
+            <h1 className={`welcome-title ${showWelcome ? "show" : "hide"}`}>
+              Welcome to Drop In!
+            </h1>
             <p className={`welcome-subtitle ${showWelcome ? "show" : "hide"}`}>
               Find local pickup sports near you — play anytime, anywhere.
             </p>
@@ -81,33 +67,36 @@ export const Home = () => {
             >
               {showEvents ? "Hide Events" : "Browse Events"}
             </button>
-             {/* New Start Thread button */}
-        <button
-          className="btn-primary start-thread-btn"
-          onClick={() => navigate("/threads")} // 👈 or open a modal later
-        >
-          💬 See What People Are Saying
-        </button>
+
+            {/* Threads Button */}
+            <button
+              className="btn-primary start-thread-btn"
+              onClick={() => navigate("/threads")}
+            >
+              💬 See What People Are Saying
+            </button>
           </div>
         </div>
       )}
-      {showEvents && isLoading && (<LoadingSpinner />)}
 
-      {/* EVENTS SECTION — Appears when clicking “Browse Events” or if user is logged in */}
+      {/* EVENTS SECTION */}
       {(showEvents || user) && (
-      <div className={`event-list-container show ${user ? "loggedin" : ""}`}>
-      <div className="event-actions">
+        <div className={`event-list-container show ${user ? "loggedin" : ""}`}>
+          <div className="event-actions">
             <button
               className="create-event-button"
               onClick={() => navigate("/events")}
             >
               Events
             </button>
+
             <button
-          className="create-event-button"
-          onClick={() => navigate("/threads")} // 👈 or open a modal later
-        >Threads
-        </button>
+              className="create-event-button"
+              onClick={() => navigate("/threads")}
+            >
+              Threads
+            </button>
+
             {user && (
               <button
                 id="messages-button"
@@ -117,16 +106,14 @@ export const Home = () => {
                 Messages
               </button>
             )}
-      </div>
-
-          
+          </div>
 
           {renderEventsList()}
         </div>
       )}
 
-    {/* MAP SECTION */}
-    <div className="body-wrapper">
+      {/* MAP SECTION */}
+      <div className="body-wrapper">
         <MapComponent
           latitude={33.46156025}
           longitude={-112.32191100688232}
