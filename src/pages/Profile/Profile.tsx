@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Profile } from "../../model/Profile";
 import "./Profile.css";
 import { Avatar } from "../../components/Profile/Avatar";
+import { ProfileActions } from "./ProfileActions";
+
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 export const ProfilePage: React.FC = () => {
   const { user: authUser } = useAuth(); // logged-in user
@@ -76,15 +78,24 @@ export const ProfilePage: React.FC = () => {
       ) : (
         <p>No sports listed.</p>
       )}
+      <div className="profile-user-actions-wrapper">
+      <button
+                className="btn"
+                onClick={() => navigate(`/events/${profile.username}`)}
+            >
+                Events Info
+            </button>
+      {isOwnProfile && 
+            <button
+                className="btn"
+                onClick={() => navigate(`/editprofile/${profile.username}`)}
+            >
+                Edit Profile
+            </button>
+        }
+        </div>
 
-      {isOwnProfile && (
-        <button
-          className="btn"
-          onClick={() => navigate(`/editprofile/${profile.username}`)}
-        >
-          Edit Profile
-        </button>
-      )}
+
     </div>
   );
 };

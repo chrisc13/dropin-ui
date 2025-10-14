@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { DropEvent } from "../../model/DropEvent";
 import { DropEventCard } from "../../components/DropEventCard/DropEventCard";
-import { handleGetDropEvents } from "../../services/dropEventsService";
+import { handleGetDropEvents, handleCreateDropEvent } from "../../services/dropEventsService";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import "./Events.css";
 import { CreateEventForm } from "../../components/Form/CreateEventForm";
 import { Popup } from "../../components/Popup/Popup";
-import { handleCreateDropEvent } from "../../services/dropEventsService";
 import { FormFields } from "../../types/FormFields";
+import "./Events.css";
 
 // Haversine formula to calculate distance in miles
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const toRad = (x: number) => (x * Math.PI) / 180;
-  const R = 3958.8; // Radius of Earth in miles
+  const R = 3958.8;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
@@ -28,10 +27,17 @@ export const EventsPage: React.FC = () => {
   const [events, setEvents] = useState<DropEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const [sortOption, setSortOption] = useState<string>("date");
   const navigate = useNavigate();
+  const { username } = useParams<{ username?: string }>();
+
+  const [sortOption, setSortOption] = useState<string>("date");
   const [showCreateEventPopup, setShowCreateEventPopup] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Toggle filter state: defaults to Attending if username exists
+  const [userEventFilter, setUserEventFilter] = useState<"All" | "Attending" | "Organizing">(
+    username ? "Organizing" : "All"
+  );
 
   // Get user location
   useEffect(() => {
@@ -45,13 +51,13 @@ export const EventsPage: React.FC = () => {
     }
   }, []);
 
+  // Fetch events
   useEffect(() => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
         const data = await handleGetDropEvents();
 
-        // Compute distance if we have user location
         if (userLocation) {
           data.forEach((e) => {
             e.distance = getDistance(userLocation.lat, userLocation.lng, e.latitude, e.longitude);
@@ -68,7 +74,23 @@ export const EventsPage: React.FC = () => {
     fetchEvents();
   }, [userLocation]);
 
-  const sortedEvents = [...events].sort((a, b) => {
+  // Filter events based on toggle and username/user
+  const userFilter = username || user?.username || "";
+  const filteredEvents = events.filter((e) => {
+    if (!userFilter) return true; // no user filter, show all
+    switch (userEventFilter) {
+      case "Attending":
+        return e.attendees?.some((a) => a.username.toLowerCase() === userFilter.toLowerCase());
+      case "Organizing":
+        return e.organizerName?.toLowerCase() === userFilter.toLowerCase();
+      case "All":
+      default:
+        return true;
+    }
+  });
+
+  // Sort events
+  const sortedEvents = [...filteredEvents].sort((a, b) => {
     switch (sortOption) {
       case "distance":
         return (a.distance || 0) - (b.distance || 0);
@@ -80,6 +102,7 @@ export const EventsPage: React.FC = () => {
     }
   });
 
+  // Create Event
   const handleCreateEventSubmit = async (values: FormFields<DropEvent>) => {
     const newEvent: DropEvent = {
       eventName: values.eventName || "",
@@ -92,8 +115,8 @@ export const EventsPage: React.FC = () => {
       maxPlayers: values.maxPlayers || 0,
       currentPlayers: values.currentPlayers || 1,
       attendees: values.attendees || [],
-      organizerName: "",
-      organizerId: "",
+      organizerName: user?.username || "",
+      organizerId: user?.id || "",
       latitude: values.latitude || 0,
       longitude: values.longitude || 0,
     };
@@ -110,19 +133,17 @@ export const EventsPage: React.FC = () => {
     }
   };
 
-  const start = new Date();
-  const newTime = new Date(start.getTime() + 30 * 60 * 1000);
   const initialDropEvent: FormFields<DropEvent> = {
     sport: "",
     eventDetails: "",
     location: "",
-    start: newTime,
+    start: new Date(new Date().getTime() + 30 * 60 * 1000),
     maxPlayers: 0,
   };
 
   const renderEvents = () => {
     if (isLoading) return <LoadingSpinner />;
-    if (!events.length) return <p style={{ textAlign: "center" }}>No events available.</p>;
+    if (!sortedEvents.length) return <p style={{ textAlign: "center" }}>No events available.</p>;
 
     return (
       <div className="events-grid">
@@ -146,22 +167,15 @@ export const EventsPage: React.FC = () => {
 
   return (
     <div className="events-page">
-        <h1>Events</h1>
-      {/*user && (
-      <div className="user-events-actions">
-          <button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
-            Organizing
-          </button>
-          <button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
-            Attending
-          </button>
-          
-          </div>
-      )*/}
+      <h1>{username ? `${username}'s Events` : "Events"}</h1>
+
+      {/* Header with Create & Sort */}
       <div className="events-header">
-        {user && (<button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
+        {user && (
+          <button className="create-event-button" onClick={() => setShowCreateEventPopup(true)}>
             Create Event
-          </button>)}
+          </button>
+        )}
         <select
           className="events-sort-select"
           value={sortOption}
@@ -173,6 +187,43 @@ export const EventsPage: React.FC = () => {
         </select>
       </div>
 
+      {/* User Event Filter Toggle */}
+      {user && (username || user) && (
+        <div className="event-filter-toggle" style={{ marginBottom: "1rem" }}>
+          <label>
+            <input
+              type="checkbox"
+              name="userEventFilter"
+              value="All"
+              checked={userEventFilter === "All"}
+              onChange={() => setUserEventFilter("All")}
+            />
+            All
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="userEventFilter"
+              value="Attending"
+              checked={userEventFilter === "Attending"}
+              onChange={() => setUserEventFilter("Attending")}
+            />
+            Attending
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="userEventFilter"
+              value="Organizing"
+              checked={userEventFilter === "Organizing"}
+              onChange={() => setUserEventFilter("Organizing")}
+            />
+            Organizing
+          </label>
+        </div>
+      )}
+
+      {/* Create Event Popup */}
       {showCreateEventPopup && (
         <Popup
           title="Create Event"

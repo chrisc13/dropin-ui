@@ -18,6 +18,7 @@ import { ThreadDetails } from "./pages/Threads/ThreadDetails";
 import ChatWindow from "./pages/Messages/ChatWindow";
 import Messages from "./pages/Messages/Messages";
 import { TabBar } from "./components/TabBar/TabBar";
+import { DropEventProvider } from "./context/DropEventContext";
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
           />
         </Helmet>
       <Router>
-        <AppContent />  {/* <-- Move logic into here */}
+        <DropEventProvider>
+          <AppContent />  {/* <-- Move logic into here */}
+        </DropEventProvider>
       </Router>
     </AuthProvider>
   );
@@ -66,6 +69,12 @@ function AppContent() {
         />
         <Route
           path="/events"
+          element={
+              <EventsPage />
+          }
+        />
+        <Route
+          path="/events/:username"
           element={
               <EventsPage />
           }

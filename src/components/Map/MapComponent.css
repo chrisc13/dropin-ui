@@ -87,7 +87,6 @@
   position: absolute;
   width: 200px;
   height: 200px;
-  background: red;
   z-index: 1000;
   margin-top: 400px;
   left: 25%;
@@ -96,8 +95,8 @@
 .map-cards-wrapper{
   position: absolute;
   display: flex;
+  margin-top: 500px;
   z-index: 900;
-  margin-top: 450px;
   left: 25%;
   overflow-x: auto;          /* allow horizontal scroll */
   scroll-snap-type: x mandatory; 
@@ -111,6 +110,7 @@
   height: 250px;
   width: 250px;
   margin-right: 50px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
 .map-cards-wrapper img{
   height: 100px;
@@ -119,11 +119,9 @@
 @media (max-width: 751px) {
 
     .map-search-input {
-      width: 300px;
       padding: 8px;
     }
   .map-cards-wrapper{
-    margin-top: 500px;
     width: 100%;
     left: 0%;
 
