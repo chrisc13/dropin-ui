@@ -83,7 +83,7 @@ export const ProfilePage: React.FC = () => {
                 className="btn"
                 onClick={() => navigate(`/events/${profile.username}`)}
             >
-                Events Info
+                Events
             </button>
       {isOwnProfile && 
             <button

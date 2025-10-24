@@ -2,6 +2,8 @@ import React from "react";
 import { DropEvent } from "../../model/DropEvent";
 import { useNavigate } from "react-router-dom";
 import { handleAttendDropEvent } from "../../services/dropEventsService";
+import { useDropEvents } from "../../context/DropEventContext";
+import { useAuth } from "../../context/AuthContext";
 
 interface EventFooterProps {
   dropEvent: DropEvent;
@@ -17,10 +19,13 @@ export const EventFooter: React.FC<EventFooterProps> = ({
   onAttend,
 }) => {
   const navigate = useNavigate();
+  const { attendEvent } = useDropEvents();
+  const { user } = useAuth()
 
   const handleAttendClick = async () => {
+    if (!user){return}
     try {
-      await handleAttendDropEvent(dropEvent.id ?? "");
+      await attendEvent(dropEvent.id ?? "", user.username)
       if (onAttend) onAttend();
       onClose();
     } catch (err) {

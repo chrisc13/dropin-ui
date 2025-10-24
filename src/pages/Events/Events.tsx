@@ -9,6 +9,7 @@ import { CreateEventForm } from "../../components/Form/CreateEventForm";
 import { Popup } from "../../components/Popup/Popup";
 import { FormFields } from "../../types/FormFields";
 import "./Events.css";
+import { useDropEvents } from "../../context/DropEventContext";
 
 // Haversine formula to calculate distance in miles
 const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -24,8 +25,8 @@ const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => 
 };
 
 export const EventsPage: React.FC = () => {
-  const [events, setEvents] = useState<DropEvent[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { dropEvents, createEvent } = useDropEvents();
+  const [isLoading, setIsLoading] = useState(!dropEvents);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { username } = useParams<{ username?: string }>();
@@ -51,32 +52,32 @@ export const EventsPage: React.FC = () => {
     }
   }, []);
 
-  // Fetch events
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      try {
-        const data = await handleGetDropEvents();
+  // add distance to events
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const data = dropEvents
 
-        if (userLocation) {
-          data.forEach((e) => {
-            e.distance = getDistance(userLocation.lat, userLocation.lng, e.latitude, e.longitude);
-          });
-        }
+  //       if (userLocation) {
+  //         data.forEach((e) => {
+  //           e.distance = getDistance(userLocation.lat, userLocation.lng, e.latitude, e.longitude);
+  //         });
+  //       }
 
-        setEvents(data);
-      } catch (err) {
-        console.error("Error fetching events:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchEvents();
-  }, [userLocation]);
+  //       setEvents(data);
+  //     } catch (err) {
+  //       console.error("Error fetching events:", err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchEvents();
+  // }, [userLocation]);
 
   // Filter events based on toggle and username/user
   const userFilter = username || user?.username || "";
-  const filteredEvents = events.filter((e) => {
+  const filteredEvents = dropEvents.filter((e) => {
     if (!userFilter) return true; // no user filter, show all
     switch (userEventFilter) {
       case "Attending":
@@ -123,8 +124,7 @@ export const EventsPage: React.FC = () => {
 
     try {
       setIsLoading(true);
-      await handleCreateDropEvent(newEvent);
-      setEvents((prev) => [...prev, newEvent]);
+      await createEvent(newEvent)
     } catch (err) {
       console.error("Error creating drop event:", err);
     } finally {

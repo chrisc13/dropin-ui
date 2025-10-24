@@ -11,9 +11,9 @@
     margin-top: 85px;
   }
   .chat-page-avatar{
-    display: flex;
-    justify-content: center; /* horizontal center */
-    align-items: center;   
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .messages-container {
     flex: 1;
