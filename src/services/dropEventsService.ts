@@ -47,7 +47,7 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
       return true;
     } catch (error) {
       console.error("Fetch error:", error);
-      throw error; // Re-throw the error after logging
+      return false;
     }
   };
 
@@ -70,7 +70,7 @@ const getDropEvents = async (): Promise<DropEvent[]> => {
       return true;
     } catch (error) {
       console.error("Fetch error:", error);
-      throw error; // Re-throw the error after logging
+      return false;
     }
   };
 

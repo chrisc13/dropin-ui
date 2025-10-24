@@ -135,7 +135,7 @@ function AppContent() {
           }
         />
       </Routes>
-      {!shouldHideNavbar  && <TabBar></TabBar>}
+      {user  && <TabBar></TabBar>}
     </>
   );
 }

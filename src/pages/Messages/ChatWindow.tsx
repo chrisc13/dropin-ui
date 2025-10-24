@@ -1,13 +1,15 @@
-import React, { useState, useRef, FormEvent, useEffect, useMemo } from "react";
+import React, { useState, useRef, FormEvent, useEffect, useMemo, Suspense } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Avatar } from "../../components/Profile/Avatar";
 import { useAuth } from "../../context/AuthContext";
 import { handleProfileImagesRequest } from "../../services/authService";
 import { useChatHub, ChatMessage } from "../../components/Messaging/useChatHub";
 import "./ChatWindow.css";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 
 const ChatWindow: React.FC = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const { username } = useParams<{ username: string }>();
   const { user } = useAuth();
   const [profileImages, setProfileImages] = useState<Record<string, string>>({});
@@ -17,10 +19,18 @@ const ChatWindow: React.FC = () => {
   const user1 = user?.username ?? "";
   const user2 = username ?? "";
 
+  
   // Memoize token and otherUser to avoid reconnects
   const token = useMemo(() => sessionStorage.getItem("accessToken") ?? "", []);
   const { messages, sendMessage } = useChatHub(token, user2);
-
+  useEffect(() => {
+    if (user1 && user2) {
+      setLoading(true);
+      handleProfileImagesRequest([user1, user2])
+        .then((data) => setProfileImages(data))
+        .finally(() => setLoading(false));
+    }
+  }, [user1, user2]);
   // Auto-scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,6 +67,7 @@ const ChatWindow: React.FC = () => {
   };
 
   if (!user1 || !user2) return <div>Please log in to chat</div>;
+  if (loading) return <LoadingSpinner></LoadingSpinner>
 
   return (
     <div className="chat-window">

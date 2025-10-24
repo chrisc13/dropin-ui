@@ -8,18 +8,18 @@ import {
 } from "../services/dropEventsService";
 
 interface DropEventContextType {
-  dropEvents: DropEvent[] | null;
+  dropEvents: DropEvent[];
   topThreeEvents: DropEvent[] | null;
   refreshEvents: (location?: { lat: number; lng: number; radius?: number }) => Promise<void>;
   refreshTopThree: () => Promise<void>;
   createEvent: (event: DropEvent) => Promise<void>;
-  attendEvent: (eventId: string) => Promise<void>;
+  attendEvent: (eventId: string, username: string) => Promise<void>;
 }
 
 const DropEventContext = createContext<DropEventContextType | undefined>(undefined);
 
 export const DropEventProvider = ({ children }: { children: React.ReactNode }) => {
-  const [dropEvents, setDropEvents] = useState<DropEvent[] | null>(null);
+  const [dropEvents, setDropEvents] = useState<DropEvent[]>([]);
   const [topThreeEvents, setTopThreeEvents] = useState<DropEvent[] | null>(null);
 
   // 🧭 Location-aware fetch
@@ -54,21 +54,46 @@ export const DropEventProvider = ({ children }: { children: React.ReactNode }) =
 
   const createEvent = async (dropEvent: DropEvent) => {
     try {
-      await handleCreateDropEvent(dropEvent);
-      await refreshEvents(); // refresh after create
+      const response = await handleCreateDropEvent(dropEvent);
+      if (!response) throw new Error(`Failed to create event: ${response}`);
+  
+      setDropEvents(prev => [...prev, dropEvent]);
     } catch (error) {
       console.error("Error creating event:", error);
     }
   };
 
-  const attendEvent = async (eventId: string) => {
+  const attendEvent = async (eventId: string, username: string) => {
+    if (!eventId || !username){return}
     try {
-      await handleAttendDropEvent(eventId);
-      await refreshEvents(); // refresh after attending
+      // 1️⃣ Call backend
+      const response = await handleAttendDropEvent(eventId);
+      if (!response) throw new Error(`Failed to attend event: ${response}`);
+  
+      // 2️⃣ Update dropEvents locally
+      setDropEvents(prev =>
+        prev?.map(e =>
+          e.id === eventId
+            ? { ...e, attendees: [...(e.attendees ?? []), { id: "temp-id", username }] }
+            : e
+        ) ?? null
+      );
+      
+  
+      // 3️⃣ Update topThreeEvents if relevant
+      setTopThreeEvents((prev) =>
+        prev?.map((e) =>
+          e.id === eventId
+            ? { ...e, attendees: [...(e.attendees ?? []), { id: "temp-id", username }] }
+            : e
+        ) ?? null
+      );
+  
     } catch (error) {
       console.error("Error attending event:", error);
     }
   };
+  
 
   useEffect(() => {
     refreshEvents();
