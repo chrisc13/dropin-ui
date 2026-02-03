@@ -54,7 +54,9 @@ export const MapComponent: React.FC<MapProps> = ({
   isPreview,
   onSearchFocus
 }) => {
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(
+    latitude && longitude ? [latitude, longitude] : null
+  );
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
@@ -63,61 +65,92 @@ export const MapComponent: React.FC<MapProps> = ({
   const [radius, setRadius] = useState<number>(25);
   const { user } = useAuth();
 
-  // Initialize user location
-   // ✅ Ask user for location explicitly
-   useEffect(() => {
-    if (latitude && longitude) {
-      setUserLocation([latitude, longitude]);
-    } else if (navigator.geolocation) {
-      // This triggers browser permission prompt
+  const requestUserLocation = () => {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
+        (pos) => {
+          const coords = {
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+          };
+
+          // Save in React state
+          setUserLocation([coords.latitude, coords.longitude]);
+
+          // Save in localStorage for reuse later
+          localStorage.setItem("userLocation", JSON.stringify(coords));
+        },
         (err) => {
           console.warn("Geolocation denied:", err.message);
-          setUserLocation([33.46, -112.32]); // fallback (Phoenix)
+
+          // fallback Phoenix
+          setUserLocation([33.46, -112.32]);
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );
     } else {
       setUserLocation([33.46, -112.32]);
     }
-  }, [latitude, longitude]);
+  };
+
 
   // Perform search
-  const performSearch = useCallback(async (query: string) => {
-    if (query.length < 2) return;
-    setIsLoading(true);
-    try {
-      const geoRes = await fetch(`${API_BASE_URL}/api/Location/geocode?address=${encodeURIComponent(query)}`);
-      const geoData = await geoRes.json();
-      if (!geoData.lat || !geoData.lng) return;
+  const performSearch = useCallback(
+    async (query: string, coords?: [number, number]) => {
+      if (query.length < 2 || !coords) return;
+      setIsLoading(true);
+      try {
+        const [searchLat, searchLng] = coords;
+         const requestBody = {
+            DisplayName: query,
+            Latitude: searchLat,
+            Longitude: searchLng,
+          };
 
-      const searchLat = parseFloat(geoData.lat);
-      const searchLng = parseFloat(geoData.lng);
-      setUserLocation([searchLat, searchLng]);
+         const geoRes = await fetch(`${API_BASE_URL}/api/Location/geocode2`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          });
 
-      const eventsRes = await fetch(
-        `${API_BASE_URL}/Event/nearby?maxDistanceMiles=${radius}&latitude=${searchLat}&longitude=${searchLng}`
-      );
-      const eventsData = await eventsRes.json();
-      setSearchResults(eventsData);
-    } catch (err) {
-      console.error("Search failed", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [radius]);
+        const geoData = await geoRes.json();
+        if (!geoData.latitude || !geoData.longitude) return;
+
+        setUserLocation([parseFloat(geoData.latitude), parseFloat(geoData.longitude)]);
+
+        const eventsRes = await fetch(
+          `${API_BASE_URL}/Event/nearby?maxDistanceMiles=${radius}&latitude=${searchLat}&longitude=${searchLng}`
+        );
+        const eventsData = await eventsRes.json();
+        setSearchResults(eventsData);
+      } catch (err) {
+        console.error("Search failed", err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [radius]
+  );
 
   // Debounced search input
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchText(value);
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    debounceTimeout.current = setTimeout(() => performSearch(value), 2500);
-  }, [performSearch]);
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchText(value);
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+      debounceTimeout.current = setTimeout(() => {
+        if (userLocation) performSearch(value, userLocation);
+      }, 2500);
+    },
+    [performSearch, userLocation]
+  );
 
   const handleSearchButton = () => {
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    performSearch(searchText);
+    if (!userLocation) {
+      requestUserLocation();
+    }
+    performSearch(searchText, userLocation!);
   };
 
   // Scroll selected card into view
@@ -138,7 +171,10 @@ export const MapComponent: React.FC<MapProps> = ({
             className="map-search-input"
             placeholder="Type to search nearby"
             value={searchText}
-            onFocus={onSearchFocus}
+            onFocus={() => {
+              requestUserLocation();
+              if (onSearchFocus) onSearchFocus();
+            }}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
           <button className="map-search-button" onClick={handleSearchButton}>
@@ -175,7 +211,7 @@ export const MapComponent: React.FC<MapProps> = ({
             icon={defaultIcon}
           />
         ))}
-          <RecenterMap lat={userLocation[0]} lng={userLocation[1]} />
+        <RecenterMap lat={userLocation[0]} lng={userLocation[1]} />
 
         {selectedEvent && <RecenterMap lat={selectedEvent.latitude} lng={selectedEvent.longitude} />}
 
@@ -186,7 +222,7 @@ export const MapComponent: React.FC<MapProps> = ({
               key={e.id}
               style={{ "--i": index } as React.CSSProperties}
             >
-                <DropEventCard
+              <DropEventCard
                 dropEvent={e}
                 isLoggedIn={!!user}
                 isAttending={false}
@@ -201,4 +237,3 @@ export const MapComponent: React.FC<MapProps> = ({
 };
 
 export default MapComponent;
-

@@ -59,17 +59,43 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
       if (value.length < 3) return;
 
       try {
-        const res = await fetch(
-          `${API_BASE_URL}/api/Location/geocode?address=${encodeURIComponent(value)}`
-        );
-        const data = await res.json();
+        const saved = localStorage.getItem("userLocation");
 
-        if (data.lat && data.lng) {
-          const lat = parseFloat(data.lat);
-          const lng = parseFloat(data.lng);
-          setTempLocation([lat, lng]); // preview only
-          setTempDisplayName(data.displayName);
-        }
+    let searchLat = null;
+    let searchLng = null;
+
+    if (saved) {
+      const coords = JSON.parse(saved);
+      searchLat = coords.latitude;
+      searchLng = coords.longitude;
+    }
+
+    const requestBody = {
+      DisplayName: value,
+      Latitude: searchLat,
+      Longitude: searchLng,
+    };
+
+    const geoRes = await fetch(
+      `${API_BASE_URL}/api/Location/geocode2`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      }
+    );
+
+    const data = await geoRes.json();
+
+    if (data.latitude && data.longitude) {
+      const lat = parseFloat(data.latitude);
+      const lng = parseFloat(data.longitude);
+
+      setTempLocation([lat, lng]); // preview only
+      setTempDisplayName(data.displayName);
+    }
       } catch (err) {
         console.error("Geocoding failed", err);
       }
